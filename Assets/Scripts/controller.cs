@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
-
 public class controller : MonoBehaviour
 {
     // 1. Declare Variables
@@ -14,6 +13,27 @@ public class controller : MonoBehaviour
     int port; //3
 
     bool jump; //6
+
+
+    int startX;
+
+    int startY;
+
+    int endX;
+
+    int endY;
+
+
+    float angle;
+
+
+    Vector3 startPoint;
+
+    Vector3 endPoint;
+
+
+
+    
 
     // 2. Initialize variables
     void Start()
@@ -46,7 +66,27 @@ public class controller : MonoBehaviour
                 byte[] data = client.Receive(ref anyIP); //4
 
                 string text = Encoding.UTF8.GetString(data); //5
-                print(">> " + text);
+
+                if (text.StartsWith("start:")) 
+                {
+                    string startValue = text.Split(':')[1];
+                    startX = int.Parse(startValue.Split(',')[0].Remove(0,1));
+                    startY = int.Parse(startValue.Split(',')[1].Remove(startValue.Split(',')[1].Length - 1));
+                    startPoint = new Vector3(startX, startY, 1);
+                }
+
+                if (text.StartsWith("end:")) 
+                {
+                    string endValue = text.Split(':')[1];
+                    endX = int.Parse(endValue.Split(',')[0].Remove(0,1));
+                    endY = int.Parse(endValue.Split(',')[1].Remove(endValue.Split(',')[1].Length - 1));
+                    endPoint = new Vector3(endX, endY, 1);
+                }
+
+                angle = Vector3.Angle(startPoint, endPoint);
+                print("startpoint:" + startPoint.ToString() + " endpoint:" + endPoint.ToString());
+                //print("end:" + endPoint.ToString());
+
 
                 jump = true; //6
 
@@ -68,6 +108,9 @@ public class controller : MonoBehaviour
     // 6. Check for variable value, and make the Player Jump!
     void Update()
     {
+
+        transform.rotation = Quaternion.Euler(0, 0, angle); 
+
         if (jump == true)
         {
             Jump();

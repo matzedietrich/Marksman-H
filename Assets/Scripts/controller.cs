@@ -30,6 +30,8 @@ public class controller : MonoBehaviour
 
     float angle;
 
+    float zAngle;
+
     float xPos;
 
 
@@ -41,14 +43,17 @@ public class controller : MonoBehaviour
     Vector3 endPoint;
 
 
+    Vector3 startPosition;
 
-    
+
+
 
     // 2. Initialize variables
     void Start()
     {
         port = 5065; //1 
         jump = false; //2 
+        startPosition = transform.position;
 
         InitUDP(); //4
     }
@@ -56,7 +61,7 @@ public class controller : MonoBehaviour
     // 3. InitUDP
     private void InitUDP()
     {
-        print("UDP Initialized");
+        //print("UDP Initialized");
 
         receiveThread = new Thread(new ThreadStart(ReceiveData)); //1 
         receiveThread.IsBackground = true; //2
@@ -78,46 +83,52 @@ public class controller : MonoBehaviour
 
                 //print(text);
 
-                if (text.StartsWith("d")) 
+                if (text.StartsWith("d"))
                 {
                     string degrees = text.Split(':')[1];
                     angle = float.Parse(degrees, CultureInfo.InvariantCulture.NumberFormat);
                 }
 
-                else if (text.StartsWith("x")) 
+                else if (text.StartsWith("x"))
                 {
                     string relativeXPos = text.Split(':')[1];
-                    xPos = float.Parse(relativeXPos, CultureInfo.InvariantCulture.NumberFormat)*maxXMovement;
+                    xPos = float.Parse(relativeXPos, CultureInfo.InvariantCulture.NumberFormat) * maxXMovement;
                 }
 
-                else if (text.StartsWith("y")) 
+                else if (text.StartsWith("y"))
                 {
                     string relativeYPos = text.Split(':')[1];
-                    yPos = float.Parse(relativeYPos, CultureInfo.InvariantCulture.NumberFormat)*maxYMovement;
-                }
-/* 
-                if (text.StartsWith("start:")) 
-                {
-                    string startValue = text.Split(':')[1];
-                    startX = int.Parse(startValue.Split(',')[0].Remove(0,1));
-                    startY = int.Parse(startValue.Split(',')[1].Remove(startValue.Split(',')[1].Length - 1));
-                    startPoint = new Vector3(startY, startX, 1);
+                    yPos = float.Parse(relativeYPos, CultureInfo.InvariantCulture.NumberFormat) * maxYMovement;
                 }
 
-                if (text.StartsWith("end:")) 
+                else if (text.StartsWith("z"))
                 {
-                    string endValue = text.Split(':')[1];
-                    endX = int.Parse(endValue.Split(',')[0].Remove(0,1));
-                    endY = int.Parse(endValue.Split(',')[1].Remove(endValue.Split(',')[1].Length - 1));
-                    endPoint = new Vector3(endY, endX, 1);
+                    string zDegrees = text.Split(':')[1];
+                    zAngle = float.Parse(zDegrees, CultureInfo.InvariantCulture.NumberFormat) * maxYMovement;
+                }
+                /* 
+                                if (text.StartsWith("start:")) 
+                                {
+                                    string startValue = text.Split(':')[1];
+                                    startX = int.Parse(startValue.Split(',')[0].Remove(0,1));
+                                    startY = int.Parse(startValue.Split(',')[1].Remove(startValue.Split(',')[1].Length - 1));
+                                    startPoint = new Vector3(startY, startX, 1);
+                                }
 
-                } */
+                                if (text.StartsWith("end:")) 
+                                {
+                                    string endValue = text.Split(':')[1];
+                                    endX = int.Parse(endValue.Split(',')[0].Remove(0,1));
+                                    endY = int.Parse(endValue.Split(',')[1].Remove(endValue.Split(',')[1].Length - 1));
+                                    endPoint = new Vector3(endY, endX, 1);
+
+                                } */
 
                 //angle = Vector3.Angle(startPoint, endPoint);
                 //print("startpoint:" + startPoint.ToString() + " endpoint:" + endPoint.ToString());
                 //print("end:" + endPoint.ToString());
 
-                
+
                 //print("str:"+text);
                 //print("float:"+angle.ToString());
 
@@ -138,8 +149,8 @@ public class controller : MonoBehaviour
     // 6. Check for variable value, and make the Player Jump!
     void Update()
     {
-        transform.rotation = Quaternion.Euler(0, 0, angle); 
-        transform.position = new Vector3(xPos,yPos,0);
+        transform.rotation = Quaternion.Euler(zAngle, 0, angle);
+        transform.position = (new Vector3(xPos, yPos, 0)) + startPosition;
     }
 
 }

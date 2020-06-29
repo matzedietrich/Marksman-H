@@ -18,7 +18,7 @@ public class marksmanH : MonoBehaviour
 
     float maxZ;
 
-    public float speed = 1.0f;
+    public float speed = 2.0f;
 
 
 
@@ -39,26 +39,27 @@ public class marksmanH : MonoBehaviour
         maxY = FlyingArea.transform.position.y + FlyingArea.transform.localScale.y / 2;
         minZ = FlyingArea.transform.position.z - FlyingArea.transform.localScale.z / 2;
         maxZ = FlyingArea.transform.position.z + FlyingArea.transform.localScale.z / 2;
-        print(minX);
-        print(minY);
-
+ 
         nextLocation = createRandomLocation();
     }
 
-    void Update()
-    {
+    void Update()    {
+        float step = speed;
+        //transform.position = Vector3.MoveTowards(transform.position, nextLocation, step);
+        rb.AddForce((nextLocation - transform.position)*speed);
 
-        float step = speed * Time.deltaTime;
-        transform.position = Vector3.MoveTowards(transform.position, nextLocation, step);
+
         print(Vector3.Distance(transform.position, nextLocation));
 
-        if (Vector3.Distance(transform.position, nextLocation) < 1.0f)
+        if (Vector3.Distance(transform.position, nextLocation) < 7.0f)
         {
             nextLocation = createRandomLocation();
         }
 
+    }
 
-
+    void Shoot() {
+        
     }
 
 
@@ -69,14 +70,9 @@ public class marksmanH : MonoBehaviour
         Random.Range(minY, maxY),
         Random.Range(minZ, maxZ)
     );
-        print("calculating new location");
+        //print("calculating new location");
         return location;
     }
 
-    void FixedUpdate()
-    {
-
-
-    }
 
 }

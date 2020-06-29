@@ -58,16 +58,15 @@ while True:
         # it to compute the minimum enclosing circle and
         # centroid
         gc = max(greenCnts, key=cv2.contourArea)
-        ((x, y), radius) = cv2.minEnclosingCircle(gc)
+        ((x, y), greenRadius) = cv2.minEnclosingCircle(gc)
         gM = cv2.moments(gc)
         greenCenter = (int(gM["m10"] / gM["m00"]), int(gM["m01"] / gM["m00"]))
         # only proceed if the radius meets a minimum size
-        #if radius > 10:
             # draw the circle and centroid on the frame,
             # then update the list of tracked points
-            #cv2.circle(img, (int(x), int(y)), int(radius),
-                #(0, 255, 0), 2)
-            #cv2.circle(img, greenCenter, 5, (255, 255, 255), -1)
+        cv2.circle(img, (int(x), int(y)), int(greenRadius),
+            (0, 255, 0), 2)
+        cv2.circle(img, greenCenter, 5, (0, 255, 0), -1)
     # update the points queue
     pts.appendleft(greenCenter)
 
@@ -84,17 +83,15 @@ while True:
         # it to compute the minimum enclosing circle and
         # centroid
         rc = max(redCnts, key=cv2.contourArea)
-        ((x, y), radius) = cv2.minEnclosingCircle(rc)
+        ((x, y), redRadius) = cv2.minEnclosingCircle(rc)
         rM = cv2.moments(rc)
         redCenter = (int(rM["m10"] / rM["m00"]), int(rM["m01"] / rM["m00"]))
         # only proceed if the radius meets a minimum size
-        #if radius > 10:
             # draw the circle and centroid on the frame,
             # then update the list of tracked points
-            #cv2.circle(img, (int(x), int(y)), int(radius),
-                #(0, 0, 255), 2)
-            #cv2.circle(img, redCenter, 5, (255, 255, 255), -1)
-    # update the points queue
+        cv2.circle(img, (int(x), int(y)), int(redRadius),
+            (255, 0, 0), 2)
+        cv2.circle(img, redCenter, 5, (255, 0, 0), -1)
     pts.appendleft(redCenter)
 
     if (pts[0] is not None) and (pts[1] is not None):
@@ -107,7 +104,16 @@ while True:
 
         YPos = pts[0][1]
         relativeYPos = ((frameHeight/1.5)-YPos)/(frameHeight/2)
-        print(relativeYPos)
+        #print(relativeYPos)
+
+
+        #print("RR:"+str(redRadius)+"  GR:"+str(greenRadius))
+
+        startZ = round(redRadius,2)
+        endZ = round(greenRadius,2)
+
+        zRadians = (startZ - endZ)
+        print(zRadians)
 
 
         myradians = math.atan2(pts[0][0]-pts[1][0], pts[0][1]-pts[1][1])
@@ -116,6 +122,7 @@ while True:
         sock.sendto( ("d:"+str(mydegrees)).encode(), (UDP_IP, UDP_PORT) )
         sock.sendto( ("x:"+str(relativeXPos)).encode(), (UDP_IP, UDP_PORT) )
         sock.sendto( ("y:"+str(relativeYPos)).encode(), (UDP_IP, UDP_PORT) )
+        sock.sendto( ("z:"+str(endZ)).encode(), (UDP_IP, UDP_PORT) )
 
 
 

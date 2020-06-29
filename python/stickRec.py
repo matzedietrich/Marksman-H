@@ -99,10 +99,30 @@ while True:
 
     if (pts[0] is not None) and (pts[1] is not None):
         cv2.line(img,pts[0],pts[1],(255,0,0),8)
-        print(pts)
 
-        sock.sendto( ("start:"+str(pts[0])).encode(), (UDP_IP, UDP_PORT) )
-        sock.sendto( ("end:"+str(pts[1])).encode(), (UDP_IP, UDP_PORT) )
+        XPos = pts[0][0]
+        relativeXPos = ((frameWidth/2)-XPos)/(frameWidth/2)
+        #print(relativeXPos)
+
+
+        YPos = pts[0][1]
+        relativeYPos = ((frameHeight/1.5)-YPos)/(frameHeight/2)
+        print(relativeYPos)
+
+
+        myradians = math.atan2(pts[0][0]-pts[1][0], pts[0][1]-pts[1][1])
+        mydegrees = round(math.degrees(myradians)*(-1), 2)
+
+        sock.sendto( ("d:"+str(mydegrees)).encode(), (UDP_IP, UDP_PORT) )
+        sock.sendto( ("x:"+str(relativeXPos)).encode(), (UDP_IP, UDP_PORT) )
+        sock.sendto( ("y:"+str(relativeYPos)).encode(), (UDP_IP, UDP_PORT) )
+
+
+
+
+
+        #sock.sendto( ("start:"+str(pts[0])).encode(), (UDP_IP, UDP_PORT) )
+        #sock.sendto( ("end:"+str(pts[1])).encode(), (UDP_IP, UDP_PORT) )
 
 
 

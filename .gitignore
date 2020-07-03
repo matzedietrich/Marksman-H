@@ -8,6 +8,7 @@
 /[Ll]ibrary/
 sysinfo.txt
 *.stackdump
+/Assets/VolumetricLines
 /Assets/AssetStoreTools*
 *.apk
 *.unitypackage

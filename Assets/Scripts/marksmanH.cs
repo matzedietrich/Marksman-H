@@ -5,7 +5,11 @@ using UnityEngine;
 public class marksmanH : MonoBehaviour
 {
 
+
+    [SerializeField] private Transform laserProjectile;
     public GameObject FlyingArea;
+
+    public GameObject PlayerBody;
 
 
     float minX;
@@ -22,6 +26,8 @@ public class marksmanH : MonoBehaviour
 
 
 
+
+
     private Vector3 nextLocation;
 
 
@@ -32,6 +38,9 @@ public class marksmanH : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        InvokeRepeating("Shoot", 2.0f, 1.0f);
+
         rb = GetComponent<Rigidbody>();
         minX = FlyingArea.transform.position.x - FlyingArea.transform.localScale.x / 2;
         maxX = FlyingArea.transform.position.x + FlyingArea.transform.localScale.x / 2;
@@ -41,6 +50,7 @@ public class marksmanH : MonoBehaviour
         maxZ = FlyingArea.transform.position.z + FlyingArea.transform.localScale.z / 2;
  
         nextLocation = createRandomLocation();
+
     }
 
     void Update()    {
@@ -59,7 +69,11 @@ public class marksmanH : MonoBehaviour
     }
 
     void Shoot() {
-        
+        Transform projectileTransform = Instantiate(laserProjectile, transform.position, Quaternion.identity);
+        Vector3 randomVariation = new Vector3(0f,Random.Range(-1.0f, 1.0f),0f);
+        Vector3 variedShootPosition = PlayerBody.transform.position + randomVariation;
+        Vector3 shootDir = (variedShootPosition - transform.position).normalized;
+        projectileTransform.GetComponent<laserProjectile>().Setup(shootDir);
     }
 
 

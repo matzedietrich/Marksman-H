@@ -30,6 +30,7 @@ sysinfo.txt
 .consulo/
 /*.tmp
 /*.svd
+/Python/venv
  
 # ============ #
 # OS generated #

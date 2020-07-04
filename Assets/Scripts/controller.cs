@@ -71,69 +71,34 @@ public class controller : MonoBehaviour
     // 4. Receive Data
     private void ReceiveData()
     {
-        client = new UdpClient(port); //1
-        while (true) //2
+        client = new UdpClient(port);
+        while (true)
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port); //3
-                byte[] data = client.Receive(ref anyIP); //4
-                string text = Encoding.UTF8.GetString(data); //5
-
-
+                IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
+                byte[] data = client.Receive(ref anyIP);
+                //print(data[0]);
+                string text = Encoding.UTF8.GetString(data);
+               
                 //print(text);
 
-                if (text.StartsWith("d"))
-                {
-                    string degrees = text.Split(':')[1];
-                    angle = float.Parse(degrees, CultureInfo.InvariantCulture.NumberFormat);
-                }
+                string[] splitString = text.Split('/');
+                
 
-                else if (text.StartsWith("x"))
-                {
-                    string relativeXPos = text.Split(':')[1];
-                    xPos = float.Parse(relativeXPos, CultureInfo.InvariantCulture.NumberFormat) * maxXMovement;
-                }
+                float degrees = (data[0]*2)-180;
+                angle = degrees;
 
-                else if (text.StartsWith("y"))
-                {
-                    string relativeYPos = text.Split(':')[1];
-                    yPos = float.Parse(relativeYPos, CultureInfo.InvariantCulture.NumberFormat) * maxYMovement;
-                }
+                float relativeXPos = ((data[1]-100)/100f);
+                xPos = relativeXPos;
 
-                else if (text.StartsWith("z"))
-                {
-                    string zDegrees = text.Split(':')[1];
-                    zAngle = float.Parse(zDegrees, CultureInfo.InvariantCulture.NumberFormat) * maxYMovement;
-                }
-                /* 
-                                if (text.StartsWith("start:")) 
-                                {
-                                    string startValue = text.Split(':')[1];
-                                    startX = int.Parse(startValue.Split(',')[0].Remove(0,1));
-                                    startY = int.Parse(startValue.Split(',')[1].Remove(startValue.Split(',')[1].Length - 1));
-                                    startPoint = new Vector3(startY, startX, 1);
-                                }
+                float relativeYPos = ((data[2]-100)/100f);
+                yPos = relativeYPos;
 
-                                if (text.StartsWith("end:")) 
-                                {
-                                    string endValue = text.Split(':')[1];
-                                    endX = int.Parse(endValue.Split(',')[0].Remove(0,1));
-                                    endY = int.Parse(endValue.Split(',')[1].Remove(endValue.Split(',')[1].Length - 1));
-                                    endPoint = new Vector3(endY, endX, 1);
+                float zDegrees = data[3];
+                zAngle = zDegrees;
+                
 
-                                } */
-
-                //angle = Vector3.Angle(startPoint, endPoint);
-                //print("startpoint:" + startPoint.ToString() + " endpoint:" + endPoint.ToString());
-                //print("end:" + endPoint.ToString());
-
-
-                //print("str:"+text);
-                //print("float:"+angle.ToString());
-
-
-                jump = true; //6
 
             }
             catch (Exception e)
@@ -143,10 +108,8 @@ public class controller : MonoBehaviour
         }
     }
 
-    // 5. Make the Player Jump
 
 
-    // 6. Check for variable value, and make the Player Jump!
     void Update()
     {
         transform.rotation = Quaternion.Euler(zAngle, 0, angle);

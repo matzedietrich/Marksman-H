@@ -107,31 +107,24 @@ while True:
         #print(relativeYPos)
 
 
-        #print("RR:"+str(redRadius)+"  GR:"+str(greenRadius))
-
         startZ = round(redRadius,2)
         endZ = round(greenRadius,2)
 
         zRadians = (startZ - endZ)
-        print(zRadians)
+        #print(zRadians)
 
 
         myradians = math.atan2(pts[0][0]-pts[1][0], pts[0][1]-pts[1][1])
         mydegrees = round(math.degrees(myradians)*(-1), 2)
 
-        sock.sendto( ("d:"+str(mydegrees)).encode(), (UDP_IP, UDP_PORT) )
-        sock.sendto( ("x:"+str(relativeXPos)).encode(), (UDP_IP, UDP_PORT) )
-        sock.sendto( ("y:"+str(relativeYPos)).encode(), (UDP_IP, UDP_PORT) )
-        sock.sendto( ("z:"+str(endZ)).encode(), (UDP_IP, UDP_PORT) )
+        my_bytes = bytearray()
 
+        my_bytes.append(int((mydegrees+180)/2))
+        my_bytes.append(int((relativeXPos*100)+100))        
+        my_bytes.append(int((relativeYPos*100)+100))
+        my_bytes.append(int(endZ))
 
-
-
-
-        #sock.sendto( ("start:"+str(pts[0])).encode(), (UDP_IP, UDP_PORT) )
-        #sock.sendto( ("end:"+str(pts[1])).encode(), (UDP_IP, UDP_PORT) )
-
-
+        sock.sendto(my_bytes, (UDP_IP, UDP_PORT))
 
 
     

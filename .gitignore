@@ -31,6 +31,10 @@ sysinfo.txt
 /*.tmp
 /*.svd
 /Python/venv
+/Assets/Materials
+/Assets/Sounds
+/Assets/Scenes
+/Assets/Models
  
 # ============ #
 # OS generated #

@@ -20,14 +20,14 @@ last = []
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
 # list of tracked points
-greenLower = (19, 95, 0)
-greenUpper = (86, 255, 255)
+greenLower = (49, 63, 69)
+greenUpper = (79, 229, 255)
 redLower = (0, 0, 74)
 redUpper = (255, 30, 255)
 pts = deque(maxlen=2)
 # if a video path was not supplied, grab the reference
 # to the webcam
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 frameWidth = cap.get(cv2.CAP_PROP_FRAME_WIDTH)
 # allow the camera or video file to warm up
 frameHeight = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)

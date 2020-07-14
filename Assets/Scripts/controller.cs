@@ -10,6 +10,9 @@ public class controller : MonoBehaviour
 {
     // 1. Declare Variables
     Thread receiveThread; //1
+
+    private BoxCollider bc;
+
     UdpClient client; //2
     int port; //3
 
@@ -54,7 +57,7 @@ public class controller : MonoBehaviour
         port = 5065; //1 
         jump = false; //2 
         startPosition = transform.position;
-
+        bc = GetComponent<BoxCollider>();
         InitUDP(); //4
     }
 
@@ -72,32 +75,33 @@ public class controller : MonoBehaviour
     private void ReceiveData()
     {
         client = new UdpClient(port);
+        IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
+
         while (true)
         {
             try
             {
-                IPEndPoint anyIP = new IPEndPoint(IPAddress.Parse("0.0.0.0"), port);
                 byte[] data = client.Receive(ref anyIP);
                 //print(data[0]);
                 string text = Encoding.UTF8.GetString(data);
-               
+
                 //print(text);
 
                 string[] splitString = text.Split('/');
-                
 
-                float degrees = (data[0]*2)-180;
+
+                float degrees = (data[0] * 2) - 180;
                 angle = degrees;
 
-                float relativeXPos = ((data[1]-100)/100f);
+                float relativeXPos = ((data[1] - 100) / 100f);
                 xPos = relativeXPos;
 
-                float relativeYPos = ((data[2]-100)/100f);
+                float relativeYPos = ((data[2] - 100) / 100f);
                 yPos = relativeYPos;
 
                 float zDegrees = data[3];
                 zAngle = zDegrees;
-                
+
 
 
             }

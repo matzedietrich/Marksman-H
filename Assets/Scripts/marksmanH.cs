@@ -71,7 +71,7 @@ public class marksmanH : MonoBehaviour
 
 
 
-        print(Vector3.Distance(transform.position, nextLocation));
+        //print(Vector3.Distance(transform.position, nextLocation));
 
         //print(rb.velocity);
 
@@ -91,7 +91,8 @@ public class marksmanH : MonoBehaviour
         {
             Transform projectileTransform = Instantiate(laserProjectile, transform.position, Quaternion.identity);
             Vector3 randomVariation = new Vector3(0f, Random.Range(-1.0f, 1.0f), 0f);
-            Vector3 variedShootPosition = PlayerBody.transform.position + randomVariation;
+            Vector3 midHeight = new Vector3(0,(PlayerBody.GetComponent<CapsuleCollider>().height/2),0);
+            Vector3 variedShootPosition = PlayerBody.transform.position + midHeight + randomVariation;
             Vector3 shootDir = (variedShootPosition - transform.position).normalized;
             projectileTransform.GetComponent<laserProjectile>().Setup(shootDir);
             yield return new WaitForSeconds(Random.Range(minTimeBetweenShooting, maxTimeBetweenShooting));
@@ -106,7 +107,7 @@ public class marksmanH : MonoBehaviour
         Random.Range(minZ, maxZ)
 
     );
-        print("location:" + location);
+        //print("location:" + location);
         return location;
     }
 

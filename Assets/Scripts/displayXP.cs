@@ -15,6 +15,7 @@ public class displayXP : MonoBehaviour
     public void setXP(int setXP){
         xp = setXP;
         xpText.text = xp.ToString();
+        playerStats.Experience = xp;
     }    
     public void addXP(int addedXP){
         xp += addedXP;

@@ -90,9 +90,10 @@ public class marksmanH : MonoBehaviour
         while (true)
         {
             Transform projectileTransform = Instantiate(laserProjectile, transform.position, Quaternion.identity);
-            Vector3 randomVariation = new Vector3(0f, Random.Range(-1.0f, 1.0f), 0f);
             Vector3 midHeight = new Vector3(0,(PlayerBody.GetComponent<CapsuleCollider>().height/2),0);
-            Vector3 variedShootPosition = PlayerBody.transform.position + midHeight + randomVariation;
+            Vector3 quadHeight = new Vector3(0,(PlayerBody.GetComponent<CapsuleCollider>().height/4),0);
+            Vector3 randomVariation = new Vector3(0f, Random.Range(-quadHeight.y, quadHeight.y/2), 0f);
+            Vector3 variedShootPosition = PlayerBody.transform.position + midHeight + quadHeight + randomVariation;
             Vector3 shootDir = (variedShootPosition - transform.position).normalized;
             projectileTransform.GetComponent<laserProjectile>().Setup(shootDir);
             yield return new WaitForSeconds(Random.Range(minTimeBetweenShooting, maxTimeBetweenShooting));

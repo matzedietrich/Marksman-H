@@ -45,9 +45,9 @@ Run the Script: ```python stickRec.py```
 
 If you set up your lightsaber colors correctly, you should now see a blue line between the two tennis balls inside the "Result"-Window. If not, you propably set the wrong colors inside the script. Also: Make sure to change the webcam index inside **stickRec.py**, if necessarry.
 
-## May the force be with you!
+## Run the game
 Run the game application inside the **build** subdirectory.
-Hit **Start** inside the Main Menu. Good look defending yourself!
+Hit **Start** inside the Main Menu. May the force be with you!
 
 
 

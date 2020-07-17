@@ -5,9 +5,9 @@ This is a little coding project I did in my 6th semester. The idea was to create
 To play the game, the way it is meant to be played, you need to install python 3.X (+ dependencies) and have a stick with two differenct colored tennis balls at both ends of the stick ready.
 
 # Install Python
-[Windows]https://www.python.org/downloads/windows/
-[Linux]https://www.python.org/downloads/source/
-[MacOS]https://www.python.org/downloads/mac-osx/
+[Windows](https://www.python.org/downloads/windows/)
+[Linux](https://www.python.org/downloads/source/)
+[MacOS](https://www.python.org/downloads/mac-osx/)
 
 # Clone the Repository
 SSH: ```git clone git@git.imd.rocks:matthias.dietrich/marksman-h.git```

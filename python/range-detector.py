@@ -1,3 +1,6 @@
+
+# this script was taken from https://github.com/jrosebr1/imutils/blob/master/bin/range-detector
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 

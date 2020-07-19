@@ -29,6 +29,7 @@ Now paint the tennis balls in one color each. When they are dry, put the tennisb
 The stick should have two tennis balls or other objects at both ends of the stick. They need to have different colors. In my code I used **green** and **red**.
 If you want to use different colors, you would have to change the HSV color values inside the **stickRec.py**
 To identify the HSV Color values of your stick run the **range-detector.py** script inside the **/python** subdirectory: ```python range-detector.py --filter HSV --webcam```
+This script was found [here](https://github.com/jrosebr1/imutils/blob/master/bin/range-detector).
 
  Three windows will pop up (Sliders, Webcam Image, Mask). Use the sliders till the mask will only show the outlines of the object with the color you want to identify. Write down the **min** and **max** values you used for the sliders.
 

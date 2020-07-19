@@ -8,16 +8,12 @@ using System.Threading;
 using System.Globalization;
 public class controller : MonoBehaviour
 {
-    // 1. Declare Variables
-    Thread receiveThread; //1
+    Thread receiveThread;
 
     private BoxCollider bc;
 
-    UdpClient client; //2
-    int port; //3
-
-    bool jump; //6
-
+    UdpClient client;
+    int port;
 
     int startX;
 
@@ -50,28 +46,21 @@ public class controller : MonoBehaviour
 
 
 
-
-    // 2. Initialize variables
     void Start()
     {
-        port = 5065; //1 
-        jump = false; //2 
+        port = 5065;
         startPosition = transform.position;
         bc = GetComponent<BoxCollider>();
-        InitUDP(); //4
+        InitUDP();
     }
 
-    // 3. InitUDP
     private void InitUDP()
     {
-        //print("UDP Initialized");
-
         receiveThread = new Thread(new ThreadStart(ReceiveData)); //1 
         receiveThread.IsBackground = true; //2
         receiveThread.Start(); //3
     }
 
-    // 4. Receive Data
     private void ReceiveData()
     {
         client = new UdpClient(port);
@@ -82,10 +71,8 @@ public class controller : MonoBehaviour
             try
             {
                 byte[] data = client.Receive(ref anyIP);
-                //print(data[0]);
                 string text = Encoding.UTF8.GetString(data);
 
-                //print(text);
 
                 string[] splitString = text.Split('/');
 
@@ -107,7 +94,7 @@ public class controller : MonoBehaviour
             }
             catch (Exception e)
             {
-                print(e.ToString()); //7
+                print(e.ToString());
             }
         }
     }

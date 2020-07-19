@@ -11,13 +11,11 @@ public class changePosition : MonoBehaviour
 
     private float x;
     private Vector3 addPosition;
-    // Start is called before the first frame update
     void Start()
     {
         initPos = transform.position;
     }
 
-    // Update is called once per frame
     void Update()
     {
         x = controller.transform.position.x;

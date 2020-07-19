@@ -52,7 +52,7 @@ Hit **Start** inside the Main Menu. May the force be with you!
 
 
 ## Demo Video
-I put a screen recording of the game named **demo.flv** inside the subfolder **/videos**. It shows how my movement affects the virtual lightsaber inside the game. Unfortunately the video has a low framerate. Still it helps to get an idea of the game.
+I put a screen recording of the game named **demo.flv** inside the subfolder **/video**. It shows how my movement affects the virtual lightsaber inside the game. Unfortunately the video has a low framerate. Still it helps to get an idea of the game.
 
 
 

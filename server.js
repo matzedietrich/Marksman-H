@@ -1,6 +1,6 @@
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
-const runHTML = require('./web/html')
+const html = require('./web/html')
 const port = new SerialPort('COM5', { baudRate: 9600 })
 const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
@@ -17,9 +17,23 @@ port.on('open', () => {
   console.log('serial port open')
 })
 parser.on('data', data => {
-  console.log('ID:', data)
+  let type = data.split(':')[0]
+  let rfid = data.split(':')[1].trim()
+  console.log(type)
+  console.log(rfid)
 
-  let db = new sqlite3.Database('./db/waschDB.db', err => {
+  if (type == 'input') {
+    if (rfid == 'removed') {
+      html.disableInput()
+    } else {
+      html.enableInput(rfid)
+      console.log("enabling")
+    }
+  } else {
+    //html.updateProgramme(type, rfid)
+  }
+
+  /* let db = new sqlite3.Database('./db/waschDB.db', err => {
     if (err) {
       return console.error(err.message)
     }
@@ -28,7 +42,7 @@ parser.on('data', data => {
 
   let sql = `SELECT * FROM User WHERE RF_ID = ?`
 
-  db.get(sql, [data], (err, row) => {
+  db.get(sql, [rfid], (err, row) => {
     if (err) {
       return console.error(err.message)
     }
@@ -43,4 +57,5 @@ parser.on('data', data => {
     }
     console.log('Close the database connection.')
   })
+   */
 })

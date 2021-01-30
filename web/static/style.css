@@ -1,0 +1,43 @@
+body {
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width:100%;
+    height:100%;
+}
+
+*{
+    margin:0px;
+    padding:0px;
+}
+
+#userInput {
+    border: 2px solid red;
+    display: none;
+    background:white;
+}
+
+.enabled {
+    display: block !important;
+}
+
+.programme_container {
+    width: 1024px;
+    height: 768px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.day {
+    display: flex;
+    width:14%;
+    flex-direction: column;
+}
+
+.slot {
+    background: white;
+    width:96%;
+    height:21%;
+    margin:2%;
+}

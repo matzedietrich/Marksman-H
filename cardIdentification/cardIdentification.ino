@@ -1,33 +1,20 @@
 #include <SPI.h>
 #include <MFRC522.h>
-#define SS_PIN 10
-#define RST_PIN 9
-MFRC522 mfrc522(SS_PIN, RST_PIN);
+#include "RFID_Reader.h"
+
+
+#define TABLE_1_SS_PIN 10
+#define TABLE_1_RST_PIN 9
+
+RFID_Reader table1(TABLE_1_SS_PIN, TABLE_1_RST_PIN, "input");
 
 void setup()
 {
 Serial.begin(9600);
 SPI.begin();
-mfrc522.PCD_Init();
 }
 
 void loop()
 {
-if ( ! mfrc522.PICC_IsNewCardPresent())
-{
-return;
-}
-
-if ( ! mfrc522.PICC_ReadCardSerial())
-{
-return;
-}
-
-long code=0;
-
-for (byte i = 0; i < mfrc522.uid.size; i++)
-{
-code=((code+mfrc522.uid.uidByte[i])*10);
-}
-Serial.println(code);
+table1.update();
 }

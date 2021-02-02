@@ -1,4 +1,6 @@
 #include "RFID_Reader.h"
+#include <SPI.h>
+#include <MFRC522.h>
 
 RFID_Reader::RFID_Reader(byte SS_PIN, byte RST_PIN, String type) {
   this->SS_PIN = SS_PIN;
@@ -12,7 +14,6 @@ void RFID_Reader::init() {
 }
 
 void RFID_Reader::update(){
-
   if ( ! RFID.PICC_IsNewCardPresent())
   {
       return;
@@ -48,6 +49,5 @@ void RFID_Reader::update(){
   delay(500);
   RFID.PICC_HaltA();
   RFID.PCD_StopCrypto1();
-
-  
+ 
 }

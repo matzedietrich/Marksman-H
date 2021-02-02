@@ -109,6 +109,8 @@ app.post('/table', (req, res) => {
 
 */
 
+
+
 const enableInput = rfid => {
   io.emit('enableInput', rfid)
 }
@@ -117,6 +119,13 @@ const disableInput = () => {
   io.emit('disableInput')
 }
 
+
+const updateProgramme = () => {
+  io.emit('update')
+}
+
 exports.enableInput = enableInput
 exports.disableInput = disableInput
+exports.updateProgramme = updateProgramme
+
 

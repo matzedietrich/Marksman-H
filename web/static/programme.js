@@ -3,6 +3,9 @@ var userInput
 var name
 var desc
 var currentUser
+const sqlite3 = require('sqlite3').verbose()
+
+var slots
 
 var mo1
 var mo2
@@ -33,10 +36,12 @@ var so2
 var so3
 var so4
 
-
 document.addEventListener('DOMContentLoaded', function () {
-  mo1 = document.getElementById('mo1') 
+  slots = document.getElementsByClassName('slot')
+  slots.forEach(element => {
+    updateSlot(element.id.split['-'][0], element.id.split['-'][1])
+  })
 })
 
-
-
+const updateSlot = (day, slot) => {
+}

@@ -3,19 +3,21 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-family: "Rubik", sans-serif;
 }
 
-*{
-    margin:0px;
-    padding:0px;
+* {
+    margin: 0px;
+    padding: 0px;
 }
 
 #userInput {
     border: 2px solid red;
     display: none;
-    background:white;
+    background: white;
 }
 
 .enabled {
@@ -29,15 +31,59 @@ body {
     justify-content: space-between;
 }
 
-.day {
-    display: flex;
-    width:14%;
-    flex-direction: column;
+.date{
+    text-align:center;
 }
 
+.day {
+    display: flex;
+    width: 14%;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.day h1 {
+    font-size: 10pt;
+    font-weight: unset;
+    text-align: center;
+    margin-bottom:4px;
+}
+
+.day p {
+    font-size: 8pt;
+}
+
+.slot::after { 
+    content: "2";
+    position: absolute;
+    left: 55px;
+    top: -15px;
+    height: 30px;
+    width: 20px;
+    background: #4cc2f1;
+    color:white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 .slot {
-    background: white;
-    width:96%;
-    height:21%;
-    margin:2%;
+    background:white;
+    width: 110px;
+    height: 160px;
+    max-height: 160px;
+    margin-top: 40px;
+    color:#4cc2f1;
+    position: relative;
+    padding: 10px;
+    padding-top: 20px;
+    border-radius: 5px;
+    flex-grow: 0;
+}
+
+
+.slot.empty{
+    opacity:0.5;
 }

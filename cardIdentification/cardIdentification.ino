@@ -6,7 +6,7 @@
 #define TABLE_1_SS_PIN 10
 #define TABLE_1_RST_PIN 9
 
-RFID_Reader table1(TABLE_1_SS_PIN, TABLE_1_RST_PIN, "input");
+RFID_Reader table1(TABLE_1_SS_PIN, TABLE_1_RST_PIN, "mo-1");
 
 void setup()
 {

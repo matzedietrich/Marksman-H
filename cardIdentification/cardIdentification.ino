@@ -3,10 +3,15 @@
 #include "RFID_Reader.h"
 
 
-#define TABLE_1_SS_PIN 10
-#define TABLE_1_RST_PIN 9
+#define WALL_1_SS_PIN 10
+#define RST_PIN 9
 
-RFID_Reader table1(TABLE_1_SS_PIN, TABLE_1_RST_PIN, "mo-1");
+#define TABLE_1_SS_PIN 2
+
+
+RFID_Reader wall1(WALL_1_SS_PIN, RST_PIN, "mo-1");
+RFID_Reader table1(TABLE_1_SS_PIN, RST_PIN, "input");
+
 
 void setup()
 {
@@ -17,4 +22,6 @@ SPI.begin();
 void loop()
 {
 table1.update();
+wall1.update();
+
 }

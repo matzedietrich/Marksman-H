@@ -19,8 +19,6 @@ port.on('open', () => {
 parser.on('data', data => {
   let type = data.split(':')[0]
   let rfid = data.split(':')[1].trim()
-  console.log(type)
-  console.log(rfid)
 
   if (type == 'input') {
     if (rfid == 'removed') {
@@ -30,9 +28,8 @@ parser.on('data', data => {
       console.log('enabling')
     }
   } else if (rfid != 'removed') {
-    let day = type.split('-')[0]
-    let slot = type.split('-')[1]
-    handleWallCard(day, slot, rfid)
+    let slot = type
+    handleWallCard(slot, rfid)
     //html.updateProgramme(type, rfid)
   }
 
@@ -63,66 +60,142 @@ parser.on('data', data => {
    */
 })
 
-const handleWallCard = (day, slot, rfid) => {
+const handleWallCard = (slot, rfid) => {
   let db = new sqlite3.Database('./db/waschDB.db', err => {
     if (err) {
       return console.error(err.message)
     }
-    console.log('Connected to database.')
   })
 
-  let sql = `SELECT IDEA_NAME, IDEA_DESC FROM User WHERE RF_ID = ?`
+  let user_current_WT
+  let slot_WT
 
-  db.get(sql, [rfid], (err, row) => {
-    if (err) {
-      return console.error(err.message)
+  getCurrentUserWT(rfid)
+    .then(function (results) {
+      user_current_WT = results
+      getCurrentSlotWT(slot)
+        .then(function (results) {
+          slot_WT = results
+
+          console.log(user_current_WT + ' : ' + slot_WT)
+
+          if (
+            user_current_WT != slot_WT ||
+            user_current_WT == undefined ||
+            slot_WT == undefined
+          ) {
+            console.log('not same')
+            sql = `SELECT STORED_WT_NAME, STORED_WT_DESC FROM User WHERE RF_ID = ?`
+
+            db.get(sql, [rfid], (err, row) => {
+              if (err) {
+                return console.error(err.message)
+              }
+              return row
+                ? updateProgramme(
+                    slot,
+                    rfid,
+                    row.STORED_WT_NAME,
+                    row.STORED_WT_DESC
+                  )
+                : console.log(`No user found with RFID ${rfid}`)
+            })
+          }
+        })
+        .catch(function (err) {
+          console.log('error: ' + err)
+        })
+    })
+    .catch(function (err) {
+      console.log('error: ' + err)
+      db.close(err => {
+        if (err) {
+          return console.error(err.message)
+        }
+      })
+    })
+}
+
+const updateProgramme = (slot, rfid, name, desc) => {
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  db.run(
+    `INSERT INTO Waschtreffs (NAME, DESC, RF_ID) VALUES (?, ?, ?)`,
+    [name, desc, rfid],
+    function (err, res) {
+      if (err) {
+        console.log(err)
+      } else {
+        db.run(
+          `UPDATE User SET CURRENT_WT = ? WHERE RF_ID = ?`,
+          [this.lastID, rfid],
+          (err, res) => {
+            if (err) {
+              console.log(err)
+              res.status(500).send({ Response: 'Error updating user', err })
+            } else {
+            }
+          }
+        )
+        db.run(
+          `UPDATE Slots SET WT_ID = ? WHERE S_NAME = ?`,
+          [this.lastID, slot],
+          (err, res) => {
+            if (err) {
+              console.log(err)
+              res.status(500).send({ Response: 'Error updating user', err })
+            } else {
+              console.log('updated!')
+              html.updateSlot(slot)
+            }
+          }
+        )
+      }
     }
-    return row
-      ? updateProgrammeDatabase(day, slot, row.IDEA_NAME, row.IDEA_DESC, rfid)
-      : console.log(`No user found with RFID ${rfid}`)
-  })
+  )
 
-  db.close(err => {
+/*   db.close(err => {
     if (err) {
       return console.error(err.message)
     }
     console.log('Close the database connection.')
+  }) */
+}
+
+const getCurrentUserWT = function (rfid) {
+  let db = new sqlite3.Database('./db/waschDB.db', err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
+
+  return new Promise(function (resolve, reject) {
+    let sql = `SELECT CURRENT_WT FROM User WHERE RF_ID = ?`
+
+    db.get(sql, [rfid], (err, row) => {
+      if (err) {
+        reject(new Error('Error rows is undefined'))
+      }
+      resolve(row.CURRENT_WT)
+    })
   })
 }
 
-const updateProgrammeDatabase = (day, slot, name, desc, rfid) => {
-   let db = new sqlite3.Database('./db/waschDB.db')
+const getCurrentSlotWT = function (slot) {
+  let db = new sqlite3.Database('./db/waschDB.db', err => {
+    if (err) {
+      return console.error(err.message)
+    }
+  })
 
-    db.run(
-      `INSERT INTO TREFFS (NAME, DESC) VALUES (?, ?)`,
-      [name, desc],
-      (err, res) => {
-        if (err) {
-          console.log(err)
-          res.status(500).send({ Response: 'Error updating user', err })
-        } else {
-    db.run(
-      `UPDATE User SET CURRENT_TREFF_ID = ? WHERE RF_ID = ?`,
-      [this.lastID, rfid],
-      (err, res) => {
-        if (err) {
-          console.log(err)
-          res.status(500).send({ Response: 'Error updating user', err })
-        } else {
-          console.log("updated!")
-          html.updateProgramme()
-        }
-      }
-    )        }
-      }
-    )
+  return new Promise(function (resolve, reject) {
+    let sql = `SELECT WT_ID FROM Slots WHERE S_NAME = ?`
 
-   
-    db.close(err => {
+    db.get(sql, [slot], (err, row) => {
       if (err) {
-        return console.error(err.message)
+        reject(new Error('Error rows is undefined'))
       }
-      console.log('Close the database connection.')
+      resolve(row.WT_ID)
     })
-
+  })
 }

@@ -3,7 +3,6 @@ var userInput
 var name
 var desc
 var currentUser
-const sqlite3 = require('sqlite3').verbose()
 
 var slots
 
@@ -38,10 +37,13 @@ var so4
 
 document.addEventListener('DOMContentLoaded', function () {
   slots = document.getElementsByClassName('slot')
-  slots.forEach(element => {
-    updateSlot(element.id.split['-'][0], element.id.split['-'][1])
-  })
 })
 
-const updateSlot = (day, slot) => {
-}
+socket.on('programmeUpdated', function (slot,res) {
+  console.log("got event!")
+  let updatedSlot = document.getElementById(slot)
+  updatedSlot.getElementsByTagName('h1')[0].innerHTML = res.NAME
+  updatedSlot.getElementsByTagName('p')[0].innerHTML = res.DESC
+})
+
+const updateSlot = slot => {}

@@ -27,14 +27,14 @@ io.on('connection', socket => {
     let db = new sqlite3.Database('./db/waschDB.db')
 
     db.run(
-      `UPDATE USER SET IDEA_NAME = ?, IDEA_DESC = ? WHERE RF_ID = ?`,
+      `UPDATE User SET STORED_WT_NAME = ?, STORED_WT_DESC = ? WHERE RF_ID = ?`,
       [name, desc, rfid],
       (err, res) => {
         if (err) {
           console.log(err)
           res.status(500).send({ Response: 'Error updating user', err })
         } else {
-          console.log("updated!")
+          console.log('updated!')
         }
       }
     )
@@ -59,7 +59,7 @@ io.on('connection', socket => {
   })
 })
 
-http.listen(3000, () => {
+http.listen(3000, '192.168.0.152', () => {
   console.log('listening on :3000')
 })
 
@@ -109,8 +109,6 @@ app.post('/table', (req, res) => {
 
 */
 
-
-
 const enableInput = rfid => {
   io.emit('enableInput', rfid)
 }
@@ -119,13 +117,23 @@ const disableInput = () => {
   io.emit('disableInput')
 }
 
-
-const updateProgramme = () => {
-  io.emit('update')
+const updateSlot = slot => {
+  let db = new sqlite3.Database('./db/waschDB.db')
+  db.get(
+    `SELECT NAME, DESC FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.WT_ID WHERE S_NAME = ?`,
+    [slot],
+    function(err, res) {
+      console.log(slot)
+      if (err) {
+        console.log(err)
+      } else {
+        console.log(res)
+        io.emit('programmeUpdated', slot, res)
+      }
+    }
+  )
 }
 
 exports.enableInput = enableInput
 exports.disableInput = disableInput
-exports.updateProgramme = updateProgramme
-
-
+exports.updateSlot = updateSlot

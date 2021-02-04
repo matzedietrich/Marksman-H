@@ -7,11 +7,11 @@
 class RFID_Reader {
   
   private:
-    byte SS_PIN;
-    byte RST_PIN;
+    byte _SS_PIN;
+    byte _RST_PIN;
     String type;
     bool active = false;
-    MFRC522 RFID;
+    MFRC522 rfid;
     
   public:
     RFID_Reader(byte SS_PIN, byte RST_PIN, String type);

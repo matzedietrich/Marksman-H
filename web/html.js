@@ -19,6 +19,26 @@ app.get('/table', (req, res) => {
 io.on('connection', socket => {
   console.log('a user connected')
 
+  /*   getSlots(function (slots) {
+    io.emit('getSlots', slots)
+  }) */
+
+  getSlots.then(slots => {
+    var promises = []
+    slots.forEach(slot => {
+      console.log(slot)
+
+      promises.push(
+        countParticipantsOf(slot.WT_ID).then(value => {
+          slot.participants = value
+        })
+      )
+    })
+    Promise.all(promises).then(() => {
+      io.emit('getSlots', slots)
+    })
+  })
+
   socket.on('saveIdea', idea => {
     let name = idea.name
     let desc = idea.desc
@@ -39,17 +59,6 @@ io.on('connection', socket => {
       }
     )
 
-    /* db.get(
-      `SELECT IDEA_NAME FROM USER WHERE RF_ID = ?`, [rfid],
-      (err, row) => {
-        if (err) {
-          return console.log(err.message)
-        }
-        // get the last insert id
-        console.log(`updated user`)
-      }
-    ) */
-
     db.close(err => {
       if (err) {
         return console.error(err.message)
@@ -63,51 +72,26 @@ http.listen(3000, '192.168.0.152', () => {
   console.log('listening on :3000')
 })
 
-/* 
-const sqlite3 = require('sqlite3').verbose()
-var bodyParser = require('body-parser')
-app.use(bodyParser.json()) // support json encoded bodies
-app.use(bodyParser.urlencoded({ extended: true })) // support encoded bodies */
-
-/* app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
-})
-
-app.get('/table', function (req, res) {
-  res.sendFile(__dirname + '/table.html')
-}) */
-
-/*
-
-app.post('/table', (req, res) => {
-  console.log('Got body:', req.body)
-  res.sendStatus(200)
-
+const getSlots = new Promise(function (resolve, reject) {
   let db = new sqlite3.Database('./db/waschDB.db')
-  let nameInput = req.body.name_field
-  let descInput = req.body.desc_field
-  let creatorInput = 'Matthias'
-  let activeInput = 0
 
-  db.run(`INSERT INTO IDEAS(NAME,DESC,CREATOR,ACTIVE) VALUES (?, ?, ?, ?)`,[nameInput, descInput, creatorInput, activeInput], function (err) {
-      if (err) {
-        return console.log(err.message)
-      }
-      // get the last insert id
-      console.log(`A row has been inserted with rowid ${this.lastID}`)
+  let sql = `SELECT NAME, DESC, S_NAME, WT_ID FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.S_WT_ID`
+
+  db.all(sql, (err, res) => {
+    if (err) {
+      console.log(err)
+      reject(new Error('Error rows is undefined'))
     }
-  )
+    resolve(res)
+  })
 
   db.close(err => {
     if (err) {
       return console.error(err.message)
     }
-    console.log('Close the database connection.')
+    console.log('Close the database connection!')
   })
 })
-
-
-*/
 
 const enableInput = rfid => {
   io.emit('enableInput', rfid)
@@ -120,9 +104,9 @@ const disableInput = () => {
 const updateSlot = slot => {
   let db = new sqlite3.Database('./db/waschDB.db')
   db.get(
-    `SELECT NAME, DESC FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.WT_ID WHERE S_NAME = ?`,
+    `SELECT NAME, DESC FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.S_WT_ID WHERE S_NAME = ?`,
     [slot],
-    function(err, res) {
+    function (err, res) {
       console.log(slot)
       if (err) {
         console.log(err)
@@ -132,6 +116,23 @@ const updateSlot = slot => {
       }
     }
   )
+}
+
+const countParticipantsOf = WT_ID => {
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  return new Promise(function (resolve, reject) {
+    let sql = `SELECT COUNT(*) FROM User WHERE CURRENT_WT = ?`
+
+    db.all(sql, [WT_ID], (err, res) => {
+      console.log(WT_ID)
+      if (err) {
+        reject(new Error('Error rows is undefined'))
+      }
+
+      resolve(res[0]['COUNT(*)'])
+    })
+  })
 }
 
 exports.enableInput = enableInput

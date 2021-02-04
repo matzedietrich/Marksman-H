@@ -39,6 +39,21 @@ document.addEventListener('DOMContentLoaded', function () {
   slots = document.getElementsByClassName('slot')
 })
 
+const updateSlot = slot => {}
+
+const updateSlots = slots => {
+  console.log(slots)
+  slots.forEach(slot => {
+    console.log(slot.S_NAME);
+    let el = document.querySelector(`#${slot.S_NAME}`)
+    el.getElementsByTagName('h1')[0].innerHTML = slot.NAME
+    el.getElementsByTagName('p')[0].innerHTML = slot.DESC    
+    el.querySelector('.card').innerHTML = slot.participants
+    el.classList.remove('empty')
+  });
+
+}
+
 socket.on('programmeUpdated', function (slot,res) {
   console.log("got event!")
   let updatedSlot = document.getElementById(slot)
@@ -46,4 +61,5 @@ socket.on('programmeUpdated', function (slot,res) {
   updatedSlot.getElementsByTagName('p')[0].innerHTML = res.DESC
 })
 
-const updateSlot = slot => {}
+socket.on('getSlots', slots => updateSlots(slots))
+

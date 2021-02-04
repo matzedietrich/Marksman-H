@@ -31,59 +31,66 @@ body {
     justify-content: space-between;
 }
 
-.date{
-    text-align:center;
+.date {
+    text-align: center;
 }
 
 .day {
     display: flex;
-    width: 14%;
     flex-direction: column;
     position: relative;
     align-items: center;
 }
 
 .day h1 {
-    font-size: 10pt;
-    font-weight: unset;
+    margin-top: 6px;
+    font-size: 11pt;
+    width: 40px;
+    font-weight: 500;
     text-align: center;
-    margin-bottom:4px;
+    margin-bottom: 4px;
+    width: 100%;
 }
 
 .day p {
-    font-size: 8pt;
+    font-size: 10pt;
 }
 
-.slot::after { 
-    content: "2";
-    position: absolute;
-    left: 55px;
-    top: -15px;
+.card {
+    position: relative;
+    margin-top: -35px;
     height: 30px;
     width: 20px;
     background: #4cc2f1;
-    color:white;
+    color: white;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-radius: 2px;
+    border: #4cc2f1 2px solid;
 }
 
-
 .slot {
-    background:white;
-    width: 110px;
-    height: 160px;
+    background: white;
+    width: 170px;
+    height: 170px;
     max-height: 160px;
     margin-top: 40px;
-    color:#4cc2f1;
+    color: #4cc2f1;
     position: relative;
     padding: 10px;
     padding-top: 20px;
     border-radius: 5px;
-    flex-grow: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
 }
 
+.slot.empty {
+    background: none;
+}
 
-.slot.empty{
-    opacity:0.5;
+.empty .card {
+    background: none;
 }

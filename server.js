@@ -1,19 +1,15 @@
 const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const html = require('./web/html')
-const port = new SerialPort('COM5', { baudRate: 9600 })
-const parser = port.pipe(new Readline({ delimiter: '\n' }))
+//const port = new SerialPort('COM5', { baudRate: 9600 })
+//const parser = port.pipe(new Readline({ delimiter: '\n' }))
 
 const sqlite3 = require('sqlite3').verbose()
 
-/* db.close((err) => {
-  if (err) {
-    return console.error(err.message);
-  }
-  console.log('Close the database connection.');
-}); */
 
-port.on('open', () => {
+
+
+/* port.on('open', () => {
   console.log('serial port open')
 })
 parser.on('data', data => {
@@ -30,35 +26,9 @@ parser.on('data', data => {
   } else if (rfid != 'removed') {
     let slot = type
     handleWallCard(slot, rfid)
-    //html.updateProgramme(type, rfid)
   }
 
-  /* let db = new sqlite3.Database('./db/waschDB.db', err => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log('Connected to database.')
-  })
-
-  let sql = `SELECT * FROM User WHERE RF_ID = ?`
-
-  db.get(sql, [rfid], (err, row) => {
-    if (err) {
-      return console.error(err.message)
-    }
-    return row
-      ? console.log(row.SALDO)
-      : console.log(`No user found with RFID ${data}`)
-  })
-
-  db.close(err => {
-    if (err) {
-      return console.error(err.message)
-    }
-    console.log('Close the database connection.')
-  })
-   */
-})
+}) */
 
 const handleWallCard = (slot, rfid) => {
   let db = new sqlite3.Database('./db/waschDB.db', err => {
@@ -138,7 +108,7 @@ const updateProgramme = (slot, rfid, name, desc) => {
           }
         )
         db.run(
-          `UPDATE Slots SET WT_ID = ? WHERE S_NAME = ?`,
+          `UPDATE Slots SET S_WT_ID = ? WHERE S_NAME = ?`,
           [this.lastID, slot],
           (err, res) => {
             if (err) {
@@ -189,13 +159,13 @@ const getCurrentSlotWT = function (slot) {
   })
 
   return new Promise(function (resolve, reject) {
-    let sql = `SELECT WT_ID FROM Slots WHERE S_NAME = ?`
+    let sql = `SELECT S_WT_ID FROM Slots WHERE S_NAME = ?`
 
     db.get(sql, [slot], (err, row) => {
       if (err) {
         reject(new Error('Error rows is undefined'))
       }
-      resolve(row.WT_ID)
+      resolve(row.S_WT_ID)
     })
   })
 }

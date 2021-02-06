@@ -11,7 +11,9 @@ RFID_Reader::RFID_Reader(byte SS_PIN, byte RST_PIN, String type): _SS_PIN(SS_PIN
 void RFID_Reader::init() {
   //rfid = MFRC522(_SS_PIN, _RST_PIN);
   rfid.PCD_Init(_SS_PIN, _RST_PIN);
+  Serial.print(type+":" );
   rfid.PCD_DumpVersionToSerial();
+
 }
 
 void RFID_Reader::update(){

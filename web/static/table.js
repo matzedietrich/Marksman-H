@@ -1,24 +1,26 @@
 var socket = io()
-var userInput
-var name
-var desc
+var WTInput
+var WTName
+var WTDesc
 var currentUser
 
 document.addEventListener('DOMContentLoaded', function () {
-  userInput = document.getElementById('userInput')
-  ideaName = document.getElementById('ideaName')
-  ideaDesc = document.getElementById('ideaDesc')
+  WTInput = document.getElementById('WTInput')
+  WTName = document.getElementById('WTName')
+  WTDesc = document.getElementById('WTDesc')
+  WishInput = document.getElementById('WishInput')
+  WishWord = document.getElementById('WishWord')
 
-  document.getElementById('ideaName').addEventListener('input', function () {
-    console.log(ideaName.value + ' - ' + ideaDesc.value)
-    if (ideaName.value && ideaDesc.value) {
+  document.getElementById('WTName').addEventListener('input', function () {
+    console.log(WTName.value + ' - ' + WTDesc.value)
+    if (WTName.value && WTDesc.value) {
       console.log('both full')
       sendIdea()
     }
   })
 
-  document.getElementById('ideaDesc').addEventListener('input', function () {
-    if (ideaName.value && ideaDesc.value) {
+  document.getElementById('WTDesc').addEventListener('input', function () {
+    if (WTName.value && WTDesc.value) {
       console.log('both full')
       sendIdea()
     }
@@ -29,8 +31,8 @@ const sendIdea = () => {
   console.log(currentUser)
   socket.emit('saveIdea', {
     rfid: currentUser,
-    name: ideaName.value,
-    desc: ideaDesc.value
+    name: WTName.value,
+    desc: WTDesc.value
   })
   console.log('saving')
 }
@@ -44,11 +46,24 @@ const sendIdea = () => {
     }
   }); */
 
-socket.on('enableInput', function (rfid) {
-  userInput.classList.add('enabled')
+socket.on('enableWTInput', function (rfid) {
+  WTInput.classList.add('enabled')
+  document.getElementById('WTName').focus();
   currentUser = rfid
+  console.log(currentUser)
 })
 
-socket.on('disableInput', function () {
-  userInput.classList.remove('enabled')
+socket.on('disableWTInput', function () {
+  WTInput.classList.remove('enabled')
+})
+
+socket.on('enableWishInput', function (rfid) {
+  WishInput.classList.add('enabled')
+  document.getElementById('WishWord').focus();
+  currentUser = rfid
+  console.log(currentUser)
+})
+
+socket.on('disableWishInput', function () {
+  WishInput.classList.remove('enabled')
 })

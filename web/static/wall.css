@@ -1,0 +1,72 @@
+
+
+.programme_container {
+    width: 1024px;
+    height: 768px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.date {
+    text-align: center;
+}
+
+.day {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    align-items: center;
+}
+
+.day h1 {
+    margin-top: 6px;
+    font-size: 11pt;
+    width: 40px;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 4px;
+    width: 100%;
+}
+
+.day p {
+    font-size: 10pt;
+}
+
+.card {
+    position: relative;
+    margin-top: -35px;
+    height: 30px;
+    width: 20px;
+    background: #4cc2f1;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2px;
+    border: #4cc2f1 2px solid;
+}
+
+.slot {
+    background: white;
+    width: 170px;
+    height: 170px;
+    max-height: 160px;
+    margin-top: 40px;
+    color: #4cc2f1;
+    position: relative;
+    padding: 10px;
+    padding-top: 20px;
+    border-radius: 5px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    display: flex;
+}
+
+.slot.empty {
+    background: none;
+}
+
+.empty .card {
+    background: none;
+}

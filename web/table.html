@@ -5,15 +5,35 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="static/table.js"></script>
     <link rel="stylesheet" type="text/css" href="static/style.css">
+    <link rel="stylesheet" type="text/css" href="static/table.css">
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Rubik&display=swap" rel="stylesheet">
 </head>
 
 <body>
     <div class="table_container">
-        <div id="userInput">
-            <textarea id="ideaName"></textarea>
-            <textarea id="ideaDesc"></textarea>
+        <div id="WTInput" class="userInput">
+            <div class="shine"></div>
+            <div class="input_container">
+                <div class="numberLine"></div>
+                <div class="number">1</div>
+                <h1>Waschtreff-Name</h1>
+                <input id="WTName" class="small" maxlength="30"></input>
+            </div>
+            <div class="input_container">
+                <div class="number">2</div>
+                <h1>Beschreibung</h1>
+                <textarea id="WTDesc" class="big" maxlength="140"></textarea>
+            </div>
+
+        </div>
+        <div id="WishInput" class="userInput" class="small">
+            <div class="shine"></div>
+
+            <div class="input_container">
+                <h1>Wunsch</h1>
+                <input id="WishWord" maxlength="30" class="small"></input>
+            </div>
         </div>
     </div>
 </body>

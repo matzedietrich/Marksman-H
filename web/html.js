@@ -23,11 +23,9 @@ io.on('connection', socket => {
     io.emit('getSlots', slots)
   }) */
 
-  getSlots.then(slots => {
+  getSlots().then(slots => {
     var promises = []
     slots.forEach(slot => {
-      console.log(slot)
-
       promises.push(
         countParticipantsOf(slot.WT_ID).then(value => {
           slot.participants = value
@@ -72,17 +70,20 @@ http.listen(3000, '192.168.0.152', () => {
   console.log('listening on :3000')
 })
 
-const getSlots = new Promise(function (resolve, reject) {
+const getSlots = () => {
   let db = new sqlite3.Database('./db/waschDB.db')
 
-  let sql = `SELECT NAME, DESC, S_NAME, WT_ID FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.S_WT_ID`
+  return new Promise(function (resolve, reject) {
+    let sql = `SELECT NAME, DESC, S_NAME, WT_ID FROM Slots INNER JOIN Waschtreffs ON Waschtreffs.WT_ID = Slots.S_WT_ID`
 
-  db.all(sql, (err, res) => {
-    if (err) {
-      console.log(err)
-      reject(new Error('Error rows is undefined'))
-    }
-    resolve(res)
+    db.all(sql, (err, res) => {
+      if (err) {
+        console.log(err)
+        reject(new Error('Error rows is undefined'))
+      }
+      console.log(res)
+      resolve(res)
+    })
   })
 
   db.close(err => {
@@ -91,14 +92,22 @@ const getSlots = new Promise(function (resolve, reject) {
     }
     console.log('Close the database connection!')
   })
-})
-
-const enableInput = rfid => {
-  io.emit('enableInput', rfid)
 }
 
-const disableInput = () => {
-  io.emit('disableInput')
+const enableWTInput = rfid => {
+  io.emit('enableWTInput', rfid)
+}
+
+const disableWTInput = () => {
+  io.emit('disableWTInput')
+}
+
+const enableWishInput = rfid => {
+  io.emit('enableWishInput', rfid)
+}
+
+const disableWishInput = () => {
+  io.emit('disableWishInput')
 }
 
 const updateSlot = slot => {
@@ -135,6 +144,25 @@ const countParticipantsOf = WT_ID => {
   })
 }
 
-exports.enableInput = enableInput
-exports.disableInput = disableInput
+const updateSlots = () => {
+  getSlots().then(slots => {
+    var promises = []
+    slots.forEach(slot => {
+      promises.push(
+        countParticipantsOf(slot.WT_ID).then(value => {
+          slot.participants = value
+        })
+      )
+    })
+    Promise.all(promises).then(() => {
+      io.emit('getSlots', slots)
+    })
+  })
+}
+
+exports.enableWTInput = enableWTInput
+exports.disableWTInput = disableWTInput
+exports.enableWishInput = enableWishInput
+exports.disableWishInput = disableWishInput
 exports.updateSlot = updateSlot
+exports.updateSlots = updateSlots

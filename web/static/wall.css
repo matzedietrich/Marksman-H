@@ -1,3 +1,26 @@
+@keyframes removeWT {
+    0% {
+        height: 100%;
+        opacity:1;
+    }
+    100% {
+        height: 0%;
+        opacity:0;
+    }
+}
+
+@keyframes addWT_card {
+    0% {
+        transform:scale(1)
+    }
+    60% {
+        transform:scale(1.5)
+    }
+    100%{
+        transform:scale(1)
+    }
+}
+
 
 
 .programme_container {
@@ -9,6 +32,7 @@
 
 .date {
     text-align: center;
+    font-size: 20pt;
 }
 
 .day {
@@ -20,7 +44,7 @@
 
 .day h1 {
     margin-top: 6px;
-    font-size: 11pt;
+    font-size: 20pt;
     width: 40px;
     font-weight: 500;
     text-align: center;
@@ -29,42 +53,64 @@
 }
 
 .day p {
-    font-size: 10pt;
+    font-size: 15pt;
 }
 
 .card {
     position: relative;
     margin-top: -35px;
-    height: 30px;
-    width: 20px;
+    height: 60px;
+    width: 40px;
     background: #4cc2f1;
     color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 2px;
-    border: #4cc2f1 2px solid;
+    border: #4cc2f1 3px solid;
+    font-size: 20pt;
 }
 
 .slot {
-    background: white;
-    width: 170px;
-    height: 170px;
-    max-height: 160px;
+    width: 270px;
+    height: 270px;
+    max-height: 270px;
     margin-top: 40px;
     color: #4cc2f1;
     position: relative;
     padding: 10px;
     padding-top: 20px;
-    border-radius: 5px;
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     display: flex;
 }
 
-.slot.empty {
-    background: none;
+.WTbackground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.418);
+    border-radius: 5px;
+    top:0px;
+    opacity:1;
+}
+
+.added{
+}
+
+.added .card{
+    animation-name: addWT_card;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+}
+
+
+.empty .WTbackground {
+    animation-name: removeWT;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
 }
 
 .empty .card {

@@ -15,21 +15,21 @@ document.addEventListener('DOMContentLoaded', function () {
     console.log(WTName.value + ' - ' + WTDesc.value)
     if (WTName.value && WTDesc.value) {
       console.log('both full')
-      sendIdea()
+      sendWTDraft()
     }
   })
 
   document.getElementById('WTDesc').addEventListener('input', function () {
     if (WTName.value && WTDesc.value) {
       console.log('both full')
-      sendIdea()
+      sendWTDraft()
     }
   })
 })
 
-const sendIdea = () => {
+const sendWTDraft = () => {
   console.log(currentUser)
-  socket.emit('saveIdea', {
+  socket.emit('saveWTDraft', {
     rfid: currentUser,
     name: WTName.value,
     desc: WTDesc.value
@@ -37,14 +37,6 @@ const sendIdea = () => {
   console.log('saving')
 }
 
-/* 
-  form.addEventListener('submit', function(e) {
-    e.preventDefault();
-    if (input.value) {
-      socket.emit('chat message', input.value);
-      input.value = '';
-    }
-  }); */
 
 socket.on('enableWTInput', function (rfid) {
   WTInput.classList.add('enabled')

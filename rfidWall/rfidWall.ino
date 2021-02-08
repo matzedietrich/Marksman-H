@@ -40,10 +40,10 @@ void loop() {
 
     if (mfrc522[reader].PICC_IsNewCardPresent() && mfrc522[reader].PICC_ReadCardSerial()) {
       if (reader == 0) {
-        Serial.print("mo-2");
+        Serial.print("di-1");
       }
       else if (reader == 1) {
-        Serial.print("mi-1");
+        Serial.print("mi-2");
 
       }
       Serial.print(":");
@@ -68,10 +68,10 @@ void loop() {
       }
 
       if (reader == 0) {
-        Serial.print("mo-2");
+        Serial.print("di-1");
       }
       else if (reader == 1) {
-        Serial.print("mi-1");
+        Serial.print("mi-2");
 
       }
 

@@ -23,8 +23,10 @@ app.get('/table', (req, res) => {
 io.on('connection', socket => {
   console.log('a user connected')
   updateSlots()
+  updateWishes()
 
   socket.on('saveWTDraft', draft => saveWTDraft(draft))
+  socket.on('saveWish', wish => saveWish(wish).then(() => updateWishes()))
 })
 
 // decide what to do with a card that was recognized by some rfid-reader
@@ -47,7 +49,6 @@ const handleWallCard = (slot, rfid) => {
           console.log(slot_WT + ' : ' + user_current_WT)
 
           if (slot_WT == 0) {
-
             sql = `SELECT STORED_WT_NAME, STORED_WT_DESC FROM User WHERE RF_ID = ?`
 
             db.get(sql, [rfid], (err, row) => {
@@ -162,6 +163,14 @@ const countParticipantsOf = WT_ID => {
   })
 }
 
+//update the wishes on the table
+const updateWishes = () => {
+  getWishes().then(wishes => {
+    console.log(wishes)
+    io.emit('getWishes', wishes)
+  })
+}
+
 //update the slots on the wall
 const updateSlots = () => {
   getSlots().then(slots => {
@@ -190,7 +199,6 @@ const updateSlots = () => {
 //get the current waschtreff of a user
 const getCurrentUserWT = function (rfid) {
   let db = new sqlite3.Database('./db/waschDB.db')
-
 
   return new Promise(function (resolve, reject) {
     let sql = `SELECT CURRENT_WT FROM User WHERE RF_ID = ?`
@@ -224,6 +232,59 @@ const getCurrentSlotWT = function (slot) {
       }
       resolve(row.S_WT_ID)
     })
+  })
+}
+
+// add a new wish to the database
+const saveWish = wish => {
+  let word = wish.word
+  let rfid = wish.rfid
+
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  return new Promise(function (resolve, reject) {
+    let sql = `INSERT INTO Wuensche (WORD, CREATOR) VALUES (?, ?)`
+
+    db.run(sql, [word, rfid], function (err, res) {
+      if (err) {
+        console.log(err)
+        reject(new Error('Error rows is undefined'))
+      } else {
+        console.log('lastID:' + this.lastID)
+        resolve()
+      }
+    })
+  })
+  db.close(err => {
+    if (err) {
+      return console.error(err.message)
+    }
+    console.log('Close the database connection.')
+  })
+}
+
+//get wishes from database
+const getWishes = () => {
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  return new Promise(function (resolve, reject) {
+    let sql = `SELECT W_ID, CREATOR, WORD FROM Wuensche`
+
+    db.all(sql, (err, res) => {
+      if (err) {
+        console.log(err)
+        reject(new Error('Error rows is undefined'))
+      }
+      console.log("selected:"+res)
+      resolve(res)
+    })
+  })
+
+  db.close(err => {
+    if (err) {
+      return console.error(err.message)
+    }
+    console.log('Close the database connection!')
   })
 }
 

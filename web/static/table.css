@@ -1,7 +1,113 @@
+@keyframes shineGrow {
+    0% {
+        height: 0%;
+        opacity: 0;
+    }
+
+    100% {
+        height: 100%;
+        opacity: 1;
+    }
+}
+
+@keyframes showInput {
+    0% {
+        opacity: 1;
+        transform: scale(0.9);
+    }
+
+    90% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes growBubble {
+    0% {
+        transform: scale(0, 0);
+    }
+
+    90% {
+        transform: scale(1.05, 1.05);
+    }
+    100% {
+        transform: scale(1, 1);
+    }
+}
+
+@keyframes rotateWishes {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes moveWish1 {
+    0% {
+        transform: translateY(0px);
+    }
+
+    25% {
+        transform: translateY(30px);
+    }
+    55% {
+        transform: translateY(-10px);
+    }
+    85% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px, 0px);
+    }
+}
+@keyframes moveWish2 {
+    0% {
+        transform: translateY(0px);
+    }
+
+    35% {
+        transform: translateY(-30px);
+    }
+    75% {
+        transform: translateY(-10px);
+    }
+    90% {
+        transform: translateY(20px);
+    }
+    100% {
+        transform: translateY(0px, 0px);
+    }
+}
+@keyframes moveWish3 {
+    0% {
+        transform: translateY(0px);
+    }
+
+    15% {
+        transform: translateY(-0px);
+    }
+    45% {
+        transform: translateY(10px);
+    }
+    70% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0px, 0px);
+    }
+}
+
 .table_container {
     width: 1100px;
     height: 670px;
-    border: 1px solid red;
+    border: 3px solid red;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -10,14 +116,15 @@
 
 .userInput {
     display: none;
-    position: absolute;
     width: 320px;
     height: auto;
     background: #4cc2f1c7;
     flex-direction: column;
-    bottom: 100px;
     padding: 40px;
     border-radius: 10px;
+    bottom: 250px;
+    left: -80px;
+    transform-origin: bottom;
 }
 
 .userInput h1 {
@@ -42,51 +149,66 @@ input:hover {
     position: relative;
 }
 
-#WTInput input {
+#WTInput .small {
     margin-bottom: 15px;
 }
 
 .small {
     height: 40px;
-    padding: 20px;
-    font-size: 15pt;
+    font-size: 14pt;
     text-align: center;
-    border-radius: 99999999px;
-    width: 310px;
+    width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
 }
 
 .big {
-    padding: 10px;
-    font-size: 12pt;
-    height: 100px;
-    width: 310px;
-    border-radius: 20px;
+    font-size: 14pt;
+    text-align: center;
+    width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-textarea,
-input {
-    padding: 5px;
-    height: 0px !important;
-    background: none;
-    color: white;
+input,
+textarea {
+    position: relative;
+    padding: 10px;
+    width: 290px;
+    font-size: inherit;
     overflow: hidden;
+    background: none;
+    color: inherit;
+}
+
+textarea {
+    height: 20px;
     transition: height 0.3s ease-in-out;
+    border-radius: 20px;
+}
+input {
+    text-align: center;
+    border-radius: 9999999px;
+    text-align: left;
+}
+
+input:focus {
+    text-align: center;
 }
 
 textarea:focus,
 input:focus {
-    padding: 5px;
     color: #4cc2f1;
     background: #ffffffc5 !important;
 }
 
-.small:focus {
-    height: 40px !important;
+textarea:focus {
+    height: 150px;
 }
 
-.big:focus {
-    height: 100px !important;
-}
 .number {
     position: absolute;
     left: -60px;
@@ -106,6 +228,13 @@ input:focus {
 
 .enabled {
     display: flex !important;
+    opacity: 0;
+    animation-name: showInput;
+    animation-duration: 0.3s;
+    animation-delay: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
 }
 
 .numberLine {
@@ -120,18 +249,6 @@ input:focus {
     border-radius: 99999px;
 }
 
-.shine {
-    width: 80px;
-    height: 80px;
-    background: rgb(76, 194, 241);
-    background: -moz-linear-gradient(0deg, rgba(76, 194, 241, 0) 25%, rgba(76, 194, 241, 0.8) 100%);
-    background: -webkit-linear-gradient(0deg, rgba(76, 194, 241, 0) 25%, rgba(76, 194, 241, 0.8) 100%);
-    background: linear-gradient(0deg, rgba(76, 194, 241, 0) 25%, rgba(76, 194, 241, 0.8) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4cc2f1",endColorstr="#4cc2f1",GradientType=1);
-    position: absolute;
-    bottom: -80px;
-}
-
 #WTInput .shine {
     right: 70px;
     left: auto;
@@ -140,4 +257,169 @@ input:focus {
 #WishInput .shine {
     right: auto;
     left: 70px;
+}
+
+#wishesContainer {
+    position: absolute;
+    height: 670px;
+    width: 670px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    animation-name: rotateWishes;
+    animation-duration: 40s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    right: 0px;
+}
+
+.wishContainer1 {
+    width: auto;
+    height: auto;
+    position: absolute;
+    transition: transform 3s ease-in-out;
+}
+
+.wishContainer2 {
+    width: auto;
+    height: auto;
+    position: relative;
+    animation-name: growBubble;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
+.wish {
+    border-radius: 9999px;
+    background: #4cc2f13a;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px;
+    text-align: center;
+    padding: 20px;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    color: #4cc2f1;
+}
+
+.wishMove1 {
+    animation-name: moveWish1;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+.wishMove3 {
+    animation-name: moveWish1;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+.wishMove3 {
+    animation-name: moveWish3;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+}
+
+.wish:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
+}
+
+.little {
+    min-width: 75px;
+    max-width: 125px;
+    width: auto;
+}
+
+.large {
+    width: 200px;
+    height: 200px;
+}
+
+.interaction_container {
+    position: absolute;
+    width: 670px;
+    height: 100%;
+    left: 0px;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    transform: rotate(90deg);
+}
+
+.cardPlace {
+    width: 220px;
+    height: 100px;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.cardPlaceBG {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    border-radius: 10px;
+    border-top: 3px dashed #4cc2f1;
+    border-bottom: 3px dashed #4cc2f1;
+    z-index: 0;
+}
+
+#shine {
+    width: 80px;
+    height: 0%;
+    left: 0px;
+    opacity: 0;
+    bottom: 20px;
+    position: absolute;
+    background: rgb(76, 194, 241);
+    background: -moz-linear-gradient(0deg, rgba(76, 194, 241, 0) 0%, rgba(76, 194, 241, 0.8) 100%);
+    background: -webkit-linear-gradient(0deg, rgba(76, 194, 241, 0) 0%, rgba(76, 194, 241, 0.8) 100%);
+    background: linear-gradient(0deg, rgba(76, 194, 241, 0) 0%, rgba(76, 194, 241, 0.8) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#4cc2f1",endColorstr="#4cc2f1",GradientType=1);
+    transition: all 1s ease-in-out;
+}
+
+.appear {
+    animation-name: shineGrow;
+    animation-duration: 0.3s;
+    animation-iteration-count: 1;
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+    opacity: 1;
+}
+
+.card {
+    width: 80px;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 3px solid #4cc2f1;
+    border-bottom: 3px solid #4cc2f1;
+    border-right: 3px solid #4cc2f1;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    z-index: 50;
+}
+
+.card:first-child {
+    border-left: 3px solid #4cc2f1;
+    border-right: none;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.card img {
+    width: 50%;
 }

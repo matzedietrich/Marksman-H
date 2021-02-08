@@ -12,27 +12,43 @@
 
 <body>
     <div class="table_container">
-        <div id="WTInput" class="userInput">
-            <div class="shine"></div>
-            <div class="input_container">
-                <div class="numberLine"></div>
-                <div class="number">1</div>
-                <h1>Waschtreff-Name</h1>
-                <input id="WTName" class="small" maxlength="30"></input>
-            </div>
-            <div class="input_container">
-                <div class="number">2</div>
-                <h1>Beschreibung</h1>
-                <textarea id="WTDesc" class="big" maxlength="140"></textarea>
-            </div>
-
+        <div id="wishesContainer">
         </div>
-        <div id="WishInput" class="userInput" class="small">
-            <div class="shine"></div>
+        <div class="interaction_container">
+            <div class="cardPlace">
+                <div class="card wishCard"><img src="static/images/bubbles.svg" alt="bubbles"></div>
+                <div class="card wtCard"><img src="static/images/laundry.svg" alt="bubbles"></div>
+                <div class="cardPlaceBG"></div>
+                <div id="shine"></div>
 
-            <div class="input_container">
-                <h1>Wunsch</h1>
-                <input id="WishWord" maxlength="30" class="small"></input>
+            </div>
+
+            <div id="WTInput" class="userInput">
+                <div class="input_container">
+                    <div class="numberLine"></div>
+                    <div class="number">1</div>
+                    <h1>Waschtreff-Name</h1>
+                    <div class="small">
+                        <input id="WTName" maxlength="30"></input>
+                    </div>
+                </div>
+                <div class="input_container">
+                    <div class="number">2</div>
+                    <h1>Beschreibung</h1>
+                    <div class="big">
+                        <textarea id="WTDesc" maxlength="140"></textarea>
+                    </div>
+                </div>
+
+            </div>
+            <div id="WishInput" class="userInput" class="small">
+
+                <div class="input_container">
+                    <h1>Wunsch</h1>
+                    <div class="small">
+                        <input autocomplete="new-password" id="WishWord" maxlength="30"></input>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -44,16 +44,18 @@
 
 .day h1 {
     margin-top: 6px;
-    font-size: 20pt;
+    font-size: 18pt;
     width: 40px;
     font-weight: 500;
     text-align: center;
-    margin-bottom: 4px;
+    margin-bottom: 10px;
     width: 100%;
 }
 
 .day p {
-    font-size: 15pt;
+    font-size: 14pt;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .card {
@@ -69,16 +71,17 @@
     border-radius: 2px;
     border: #4cc2f1 3px solid;
     font-size: 20pt;
+    flex-shrink: 0;
 }
 
 .slot {
-    width: 270px;
-    height: 270px;
+    width: 240px;
+    height: 240px;
     max-height: 270px;
     margin-top: 40px;
     color: #4cc2f1;
     position: relative;
-    padding: 10px;
+    padding: 30px;
     padding-top: 20px;
     flex-direction: column;
     align-items: center;

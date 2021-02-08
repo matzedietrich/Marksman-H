@@ -67,12 +67,5 @@ const updateSlots = slots => {
 
 }
 
-socket.on('programmeUpdated', function (slot,res) {
-  console.log("got event!")
-  let updatedSlot = document.getElementById(slot)
-  updatedSlot.getElementsByTagName('h1')[0].innerHTML = res.NAME
-  updatedSlot.getElementsByTagName('p')[0].innerHTML = res.DESC
-})
-
 socket.on('getSlots', slots => updateSlots(slots))
 

@@ -2,13 +2,11 @@ const SerialPort = require('serialport')
 const Readline = require('@serialport/parser-readline')
 const app = require('./app')
 
-
-//const wallPort = new SerialPort('COM5', { baudRate: 9600 })
+const wallPort = new SerialPort('COM5', { baudRate: 9600 })
 const tablePort = new SerialPort('COM6', { baudRate: 9600 })
 
-//const wallParser = wallPort.pipe(new Readline({ delimiter: '\n' }))
+const wallParser = wallPort.pipe(new Readline({ delimiter: '\n' }))
 const tableParser = tablePort.pipe(new Readline({ delimiter: '\n' }))
-/* 
 wallPort.on('open', () => {
   console.log('wall serial port open')
 })
@@ -23,9 +21,11 @@ wallParser.on('data', data => {
     app.handleWallCard(slot, rfid)
   }
 })
- */
 tablePort.on('open', () => {
   console.log('table serial port open')
+})
+tablePort.on('error', function (err) {
+  console.log('error ----> ' + err)
 })
 tableParser.on('data', data => {
   let type = data.split(':')[0]
@@ -48,4 +48,3 @@ tableParser.on('data', data => {
     }
   }
 })
-

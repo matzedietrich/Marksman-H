@@ -3,7 +3,6 @@ const app = express()
 const http = require('http').Server(app)
 const io = require('socket.io')(http)
 const port = 3000
-
 const sqlite3 = require('sqlite3').verbose()
 
 http.listen(3000, '192.168.0.152', () => {

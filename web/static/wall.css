@@ -1,39 +1,58 @@
 @keyframes removeWT {
     0% {
         height: 100%;
-        opacity:1;
+        opacity: 1;
     }
     100% {
         height: 0%;
-        opacity:0;
+        opacity: 0;
     }
 }
 
 @keyframes addWT_card {
     0% {
-        transform:scale(1)
+        transform: scale(1);
     }
     60% {
-        transform:scale(1.5)
+        transform: scale(1.5);
     }
-    100%{
-        transform:scale(1)
+    100% {
+        transform: scale(1);
     }
 }
-
-
 
 .programme_container {
     width: 1024px;
     height: 768px;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .date {
     text-align: center;
-    font-size: 20pt;
+    font-size: 36pt;
+    position: absolute;
+    width: 100%;
+    z-index:250 !important;
+    margin-top:0px;
+    height:100%;
+    overflow:hidden;
+
 }
+
+.date p {
+    margin-top:10px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18pt;
+    border-radius: 5px;
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
 
 .day {
     display: flex;
@@ -52,7 +71,7 @@
     width: 100%;
 }
 
-.day p {
+.slot p {
     font-size: 14pt;
     word-wrap: break-word;
     overflow-wrap: break-word;
@@ -72,6 +91,7 @@
     border: #4cc2f1 3px solid;
     font-size: 20pt;
     flex-shrink: 0;
+    z-index: 100;
 }
 
 .slot {
@@ -79,7 +99,9 @@
     height: 240px;
     max-height: 270px;
     margin-top: 40px;
-    color: #4cc2f1;
+    margin-left:20px;
+    margin-right:20px;
+    color: white;
     position: relative;
     padding: 30px;
     padding-top: 20px;
@@ -89,25 +111,46 @@
     display: flex;
 }
 
+.slot:first-child {
+    margin-top: 180px;
+}
+
+.line {
+    position: absolute;
+    top: 0px;
+    width: 150%;
+    height: 3px;
+    background: darkgrey;
+    z-index: 100;
+}
+
+.line p {
+    position: absolute;
+    top: -25px;
+    background: black;
+    padding: 15px;
+    left: -30px;
+    color: white;
+}
+
 .WTbackground {
     position: absolute;
     width: 100%;
     height: 100%;
     background: rgba(255, 255, 255, 0.418);
     border-radius: 5px;
-    top:0px;
-    opacity:1;
+    top: 0px;
+    opacity: 1;
 }
 
-.added{
+.added {
 }
 
-.added .card{
+.added .card {
     animation-name: addWT_card;
     animation-duration: 1s;
     animation-iteration-count: 1;
 }
-
 
 .empty .WTbackground {
     animation-name: removeWT;
@@ -117,5 +160,32 @@
 }
 
 .empty .card {
-    background: none;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.today {
+    background:#c13d8e !important;
+    color:black;
+}
+
+.today::before {
+    left:-45px;
+    width: 60px;
+    height: 60px;
+    background: black;
+    position: absolute;
+    content: "";
+    transform: rotate(45deg);
+    z-index:150;
+}
+
+.today::after{
+    width:5px;
+    height:100vh;
+    background:#c13d8e;
+    content:"";
+    position: absolute;
+    top:70px;
+    left:0px;
+    border-radius:9999px;
 }

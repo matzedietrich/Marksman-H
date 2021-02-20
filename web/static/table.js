@@ -5,33 +5,45 @@ var WTDesc
 var WishWord
 var wishesContainer
 var shine
-var currentUser = 777730
+var currentUser
+
+const focus = ID => {
+  console.log(ID)
+  document.getElementById(ID).focus()
+  let numberString = ID + '_Number'
+  document.getElementById(numberString).classList.add('activeInput')
+
+  if (ID == 'WTName') {
+    WTDesc_Number.classList.remove('activeInput')
+  } else if ((ID = 'WTDesc')) {
+    WTName_Number.classList.remove('activeInput')
+  }
+}
 
 document.addEventListener('DOMContentLoaded', function () {
   WTInput = document.getElementById('WTInput')
   WTName = document.getElementById('WTName')
   WTDesc = document.getElementById('WTDesc')
+  WTName_Number = document.getElementById('WTName_Number')
+  WTDesc_Number = document.getElementById('WTDesc_Number')
   WishInput = document.getElementById('WishInput')
   WishWord = document.getElementById('WishWord')
   wishesContainer = document.getElementById('wishesContainer')
   shine = document.getElementById('shine')
+  focus('WTName')
 
-  document.getElementById('WTName').addEventListener('input', function () {
-    if (WTName.value && WTDesc.value) {
-      console.log('both full')
-    } else {
-    }
+  document.getElementById('WTName').addEventListener('focus', function () {
+    WTName_Number.classList.add('activeInput')
+    WTDesc_Number.classList.remove('activeInput')
   })
 
-  document.getElementById('WTDesc').addEventListener('input', function () {
-    if (WTName.value && WTDesc.value) {
-      console.log('both full')
-    } else {
-    }
+  document.getElementById('WTDesc').addEventListener('focus', function () {
+    WTDesc_Number.classList.add('activeInput')
+    WTName_Number.classList.remove('activeInput')
   })
 
   WishWord.addEventListener('keypress', function (event) {
-    if (event.which == 13) {
+    if (event.key == 'Enter') {
       event.preventDefault()
       let wish = document.getElementById('WishWord').value.trim()
       if (wish == '') {
@@ -44,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
   })
 
   WTName.addEventListener('keypress', function (event) {
-    if (event.which == 13) {
+    if (event.key == 'Enter') {
       event.preventDefault()
       let name = WTName.value.trim()
       let desc = WTDesc.value.trim()
@@ -56,11 +68,18 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
       sendWTDraft(currentUser, name, desc)
+    } else if (event.key == 'Tab') {
+      console.log('tabbing')
+      focus('WTDesc')
+      if (event.preventDefault) {
+        event.preventDefault()
+      }
+      return false
     }
   })
 
   WTDesc.addEventListener('keypress', function (event) {
-    if (event.which == 13) {
+    if (event.key == 'Enter') {
       event.preventDefault()
       let name = WTName.value.trim()
       let desc = WTDesc.value.trim()
@@ -75,6 +94,28 @@ document.addEventListener('DOMContentLoaded', function () {
       WTDesc.value = ''
       console.log('submitting')
       sendWTDraft(currentUser, name, desc)
+    }
+  })
+
+  WTDesc.addEventListener('keydown', function (event) {
+    if (event.key == 'Tab') {
+      console.log('tabbing')
+      focus('WTName')
+      if (event.preventDefault) {
+        event.preventDefault()
+      }
+      return false
+    }
+  })
+
+  WTName.addEventListener('keydown', function (event) {
+    if (event.key == 'Tab') {
+      console.log('tabbing')
+      focus('WTDesc')
+      if (event.preventDefault) {
+        event.preventDefault()
+      }
+      return false
     }
   })
 })
@@ -95,6 +136,9 @@ const sendWTDraft = (rfid, name, desc) => {
     desc: desc
   })
   console.log('saving')
+  WTInput.classList.add('savedWT')
+  WTInput.classList.remove('enabled')
+  shine.classList.remove('appear')
 }
 
 const updateWishes = wishes => {
@@ -153,10 +197,12 @@ const updateWishPos = wishes => {
 
 socket.on('enableWTInput', function (rfid) {
   WTInput.classList.add('enabled')
-  document.getElementById('WTName').focus()
+  focus('WTName')
   shine.style.left = 'auto'
   shine.style.right = '0px'
+  WTInput.classList.remove('savedWT')
   shine.classList.add('appear')
+
   currentUser = rfid
 })
 

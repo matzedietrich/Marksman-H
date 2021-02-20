@@ -26,6 +26,27 @@
     }
 }
 
+@keyframes saveWT {
+    0% {
+        opacity: 1;
+        transform: scale(1.05) translate(0px, 0px);
+    }
+    10% {
+        opacity: 1;
+        transform: scale(1) translate(0px, 0px);
+    }
+
+    80% {
+        opacity: 0.3;
+        transform: scale(0.2) translate(350px, 500px);
+    }
+
+    100% {
+        opacity: 0;
+        transform: scale(0.2) translate(350px, 500px);
+    }
+}
+
 @keyframes growBubble {
     0% {
         transform: scale(0, 0);
@@ -107,7 +128,6 @@
 .table_container {
     width: 1100px;
     height: 670px;
-    border: 3px solid red;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -125,6 +145,8 @@
     bottom: 250px;
     left: -80px;
     transform-origin: bottom;
+    transform: scale(0);
+    transition: transform 1s ease-in-out;
 }
 
 .userInput h1 {
@@ -147,6 +169,8 @@ input:hover {
 
 .input_container {
     position: relative;
+    opacity:1;
+    transition: opacity 0.5s ease-in-out;
 }
 
 #WTInput .small {
@@ -214,13 +238,16 @@ textarea:focus {
     left: -60px;
     top: -10px;
     text-align: center;
-    width: 40px;
-    height: 40px;
+    width: 35px;
+    height: 35px;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 50%;
     background: #4cc2f1;
+    color: #4cc2f1;
+    background: white;
+    border: 3px solid #4cc2f1;
 }
 
 #WTName {
@@ -247,6 +274,9 @@ textarea:focus {
 
 #WishInput {
     border-radius: 99999px;
+}
+
+.shine{
 }
 
 #WTInput .shine {
@@ -422,4 +452,20 @@ textarea:focus {
 
 .card img {
     width: 50%;
+}
+
+.activeInput {
+    background: #4cc2f1;
+    color: white;
+}
+
+.savedWT {
+    display: flex !important;
+    animation-name: saveWT;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.savedWT .input_container{
+    opacity:0;
 }

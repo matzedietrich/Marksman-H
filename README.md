@@ -20,7 +20,7 @@ Now make sure to have both microcontrollers connected via USB.
 Now you need to open up the `server.js` script and replace the Ports (`COM5`,`COM6`) to match your system:
 ```
 const wallPort = new SerialPort('COM5', { baudRate: 9600 })
-const tablePort = new SerialPort('COM6', { baudRate: 9600 }) to match your system
+const tablePort = new SerialPort('COM6', { baudRate: 9600 })
 ```
 
 ## Start application

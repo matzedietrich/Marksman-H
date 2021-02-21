@@ -5,11 +5,11 @@ const app = require('./app')
 
 //init ports
 const wallPort = new SerialPort('COM5', { baudRate: 9600 })
-//const tablePort = new SerialPort('COM6', { baudRate: 9600 })
+const tablePort = new SerialPort('COM6', { baudRate: 9600 })
 
 //start reading
 const wallParser = wallPort.pipe(new Readline({ delimiter: '\n' }))
-//const tableParser = tablePort.pipe(new Readline({ delimiter: '\n' }))
+const tableParser = tablePort.pipe(new Readline({ delimiter: '\n' }))
 
 //on 'open' tell me
 wallPort.on('open', () => {
@@ -33,18 +33,17 @@ wallParser.on('data', data => {
 })
 
 // on 'open' tell me
-/* tablePort.on('open', () => {
+ tablePort.on('open', () => {
   console.log('table serial port open')
-}) */
+})
 
 // on 'error' tell me
-/* tablePort.on('error', function (err) {
+ tablePort.on('error', function (err) {
   console.log('error ----> ' + err)
 })
- */
 
 // on 'data' handle data
-/* tableParser.on('data', data => {
+ tableParser.on('data', data => {
   let type = data.split(':')[0]
   let rfid = data.split(':')[1].trim()
   console.log(data)
@@ -64,4 +63,4 @@ wallParser.on('data', data => {
       console.log('enabling')
     }
   }
-}) */
+})

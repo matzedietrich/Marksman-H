@@ -1,3 +1,4 @@
+//import modules
 const express = require('express')
 const app = express()
 const http = require('http').Server(app)
@@ -5,30 +6,37 @@ const io = require('socket.io')(http)
 const port = 3000
 const sqlite3 = require('sqlite3').verbose()
 
+//init webserver
 http.listen(3000, '192.168.0.152', () => {
   console.log('listening on :3000')
 })
 
+//allow access to static folder
 app.use('/static', express.static(__dirname + '/web/static'))
 
+//send html document
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/web/index.html')
 })
 
+//send another html document
 app.get('/table', (req, res) => {
   res.sendFile(__dirname + '/web/table.html')
 })
 
+//on new socket connection
 io.on('connection', socket => {
-  console.log('a user connected')
+  //update programme
   updateSlots()
+  //update wishes
   updateWishes()
 
+  //handle events
   socket.on('saveWTDraft', draft => saveWTDraft(draft))
   socket.on('saveWish', wish => saveWish(wish).then(() => updateWishes()))
 })
 
-// decide what to do with a card that was recognized by some rfid-reader
+// decide what to do with a card that was recognized by some rfid-reader at the WaschProgramm
 const handleWallCard = (slot, rfid) => {
   let db = new sqlite3.Database('./db/waschDB.db', err => {
     if (err) {
@@ -39,42 +47,58 @@ const handleWallCard = (slot, rfid) => {
   let user_current_WT
   let slot_WT
 
-  getCurrentUserWT(rfid)
-    .then(function (results) {
-      user_current_WT = results
-      getCurrentSlotWT(slot)
-        .then(function (results) {
-          slot_WT = results
-          console.log(slot_WT + ' : ' + user_current_WT)
-
-          if (slot_WT == 0) {
-            sql = `SELECT STORED_WT_NAME, STORED_WT_DESC FROM User WHERE RF_ID = ?`
-
-            db.get(sql, [rfid], (err, row) => {
-              if (err) {
-                return console.error(err.message)
-              }
-              if (row) {
-                if (row.STORED_WT_NAME && row.STORED_WT_NAME != '') {
-                  addWT(row.STORED_WT_NAME, row.STORED_WT_DESC, rfid)
-                    .then(addedWT_ID => setCurrentWT(addedWT_ID, rfid))
-                    .then(res => setSlotWT(res, slot))
-                    .then(() => updateSlots())
-                }
-              } else {
-                console.log(`No user found with RFID ${rfid}`)
-              }
-            })
-          } else if (slot_WT != user_current_WT) {
-            setCurrentWT(slot_WT, rfid).then(() => updateSlots())
-          } else if (slot_WT == user_current_WT) {
-            setCurrentWT(0, rfid).then(() => updateSlots())
-          }
-        })
-        .catch(function (err) {
-          console.log('error catch1: ' + err)
-        })
+  checkIfRegistered(rfid)
+    .then(isRegistered => {
+      return new Promise(function (resolve, reject) {
+        if (isRegistered) {
+          resolve()
+        } else if (!isRegistered) {
+          registerCard(rfid, 0).then(resolve())
+        }
+      })
     })
+    .then(
+      getCurrentUserWT(rfid).then(function (results) {
+        user_current_WT = results
+        //find out what WaschTreff is stored in the slot
+        getCurrentSlotWT(slot)
+          .then(function (results) {
+            slot_WT = results
+
+            //if the slot is empty continue
+            if (slot_WT == 0) {
+              sql = `SELECT STORED_WT_NAME, STORED_WT_DESC FROM User WHERE RF_ID = ?`
+
+              db.get(sql, [rfid], (err, row) => {
+                if (err) {
+                  return console.error(err.message)
+                }
+                if (row) {
+                  //if the user is storing a WT Draft add the WT to the database and assign it to the slot
+                  if (row.STORED_WT_NAME && row.STORED_WT_NAME != '') {
+                    addWT(row.STORED_WT_NAME, row.STORED_WT_DESC, rfid)
+                      .then(addedWT_ID => setCurrentWT(addedWT_ID, rfid))
+                      .then(res => setSlotWT(res, slot))
+                      .then(() => updateSlots())
+                  }
+                } else {
+                  console.log(`No user found with RFID ${rfid}`)
+                }
+              })
+              //if it is not empty, the user wants to participate in that WT
+            } else if (slot_WT != user_current_WT) {
+              setCurrentWT(slot_WT, rfid).then(() => updateSlots())
+            } // if the user already particiaptes in that WT, he wants to cancel the particiaption
+            else if (slot_WT == user_current_WT) {
+              console.log('-> canceling participation...')
+              setCurrentWT(0, rfid).then(() => updateSlots())
+            }
+          })
+          .catch(function (err) {
+            console.log('error catch1: ' + err)
+          })
+      })
+    )
     .catch(function (err) {
       console.log('error catch2: ' + err)
       db.close(err => {
@@ -139,6 +163,7 @@ const removeWTFromSlot = slotname => {
       if (err) {
         reject(err)
       } else {
+        console.log('-> removed WT from Slot "'+slotname+'"')
         resolve()
       }
     })
@@ -165,7 +190,6 @@ const countParticipantsOf = WT_ID => {
 //update the wishes on the table
 const updateWishes = () => {
   getWishes().then(wishes => {
-    console.log(wishes)
     io.emit('getWishes', wishes)
   })
 }
@@ -185,6 +209,7 @@ const updateSlots = () => {
       var nextPromises = []
       slots.forEach(slot => {
         if (slot.participants == 0) {
+          console.log('-> WT "'+ slot.WT_ID + '" has no participants anymore')
           nextPromises.push(removeWTFromSlot(slot.S_NAME))
         }
       })
@@ -207,6 +232,11 @@ const getCurrentUserWT = function (rfid) {
         console.log(err)
         reject(new Error(err))
       } else if (row) {
+        if (!row.CURRENT_WT) {
+          console.log('-> user is not participating in any WT')
+        } else {
+          console.log('-> user is participating in WT "' + row.CURRENT_WT + '"')
+        }
         resolve(row.CURRENT_WT)
       }
     })
@@ -228,6 +258,15 @@ const getCurrentSlotWT = function (slot) {
       if (err) {
         console.log(err)
         reject(new Error(err))
+      }
+      if (row.S_WT_ID) {
+        console.log(
+          '-> "' + slot + '" is currently carrying WT "' + row.S_WT_ID + '"'
+        )
+      } else {
+        console.log(
+          '-> "' + slot + '" is currently carrying no WT'
+        )
       }
       resolve(row.S_WT_ID)
     })
@@ -274,7 +313,6 @@ const getWishes = () => {
         console.log(err)
         reject(new Error('Error rows is undefined'))
       }
-      console.log("selected:"+res)
       resolve(res)
     })
   })
@@ -299,7 +337,7 @@ const addWT = (name, desc, rfid) => {
         console.log(err)
         reject(new Error('Error rows is undefined'))
       } else {
-        console.log('lastID:' + this.lastID)
+        console.log('-> added WT "' + this.lastID + '" to database')
         resolve(this.lastID)
       }
     })
@@ -322,6 +360,7 @@ const setCurrentWT = (WT_ID, rfid) => {
       if (err) {
         reject(new Error('Error rows is undefined'))
       } else {
+        console.log('-> user is now particiapting in WT "'+WT_ID+'"')
         resolve(WT_ID)
       }
     })
@@ -344,12 +383,14 @@ const setSlotWT = (WT_ID, slot) => {
       if (err) {
         reject(err)
       } else {
+        console.log('-> assigned WT "'+WT_ID+'" to slot "'+slot+'"')
         resolve()
       }
     })
   })
 }
 
+//assign the WT Draft to the user
 const saveWTDraft = draft => {
   console.log('saving draft')
 
@@ -371,6 +412,58 @@ const saveWTDraft = draft => {
       }
     }
   )
+
+  db.close(err => {
+    if (err) {
+      return console.error(err.message)
+    }
+    console.log('Close the database connection.')
+  })
+}
+
+const checkIfRegistered = rfid => {
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  return new Promise(function (resolve, reject) {
+    db.all(`SELECT * FROM User WHERE RF_ID = ?`, [rfid], (err, rows) => {
+      if (err) {
+        reject()
+      } else if (rows.length > 0) {
+        resolve(true)
+      } else {
+        console.log('-> user is not registered')
+        resolve(false)
+      }
+    })
+  })
+
+  db.close(err => {
+    if (err) {
+      return console.error(err.message)
+    }
+    console.log('Close the database connection.')
+  })
+}
+
+const registerCard = (rfid, saldo) => {
+  console.log('-> registering...')
+  let db = new sqlite3.Database('./db/waschDB.db')
+
+  return new Promise(function (resolve, reject) {
+    db.run(
+      `INSERT INTO User (RF_ID, SALDO) VALUES (?, ?)`,
+      [rfid, saldo],
+      err => {
+        if (err) {
+          console.log(err)
+          reject()
+        } else {
+          console.log('-> registered successfully')
+          resolve()
+        }
+      }
+    )
+  })
 
   db.close(err => {
     if (err) {

@@ -6,7 +6,7 @@ const io = require('socket.io')(http)
 const port = 3000
 const sqlite3 = require('sqlite3').verbose()
 
-//init webserver
+//listen to port, ip-address
   http.listen(3000, '192.168.0.152', () => {
     console.log('listening on :3000')
   })

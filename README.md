@@ -52,6 +52,15 @@ const wallPort = new SerialPort('COM5', { baudRate: 9600 })
 const tablePort = new SerialPort('COM6', { baudRate: 9600 })
 ```
 
+### Replace ip address
+In the `app.js` script you also need to replace the current ip address (`'192.168.0.152'`) with the ip address of your local network:
+```
+http.listen(3000, '192.168.0.152', () => {
+    console.log('listening on :3000')
+})
+```
+You can identify the ip-address of your local network via the `ipconfig` command.
+
 ## Start application
 
 ### Connect your microcontrollers

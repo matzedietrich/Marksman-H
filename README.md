@@ -34,7 +34,7 @@ Now, that you have all the hardware prepared, assembly it as shown in the image:
 
 ### Clone repository
 First, clone the repository to your workspace.
-Either via SSH `git@git.imd.rocks:matthias.dietrich/waschraum.git` or via `https://git.imd.rocks/matthias.dietrich/waschraum.git`
+Either via SSH `git@git.imd.rocks:matthias.dietrich/waschraum.git`  or via `https://git.imd.rocks/matthias.dietrich/waschraum.git`
 
 ### Install dependencies
 Now install all the dependencies by running `npm install` inside the root directory.

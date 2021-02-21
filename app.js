@@ -7,9 +7,9 @@ const port = 3000
 const sqlite3 = require('sqlite3').verbose()
 
 //init webserver
-http.listen(3000, '192.168.0.152', () => {
-  console.log('listening on :3000')
-})
+  http.listen(3000, '192.168.0.152', () => {
+    console.log('listening on :3000')
+  })
 
 //allow access to static folder
 app.use('/static', express.static(__dirname + '/web/static'))
@@ -109,6 +109,50 @@ const handleWallCard = (slot, rfid) => {
     })
 }
 
+// decide what to do with a card that was recognized by some rfid-reader at the WaschTisch
+const handleTableCard = (type, rfid) => {
+  //check if card is registered
+
+  if (rfid != 'removed') {
+    checkIfRegistered(rfid)
+      .then(isRegistered => {
+        return new Promise(function (resolve, reject) {
+          if (isRegistered) {
+            //already registered? -> continue
+            resolve()
+          } else if (!isRegistered) {
+            //not registered? -> register
+            registerCard(rfid, 0)
+              .then(resolve())
+              .catch(function (err) {
+                console.log('error: ', err)
+              })
+          }
+        })
+      })
+      .catch(function (err) {
+        console.log('error: ', err)
+      })
+  }
+  if (type == 'wt') {
+    if (rfid == 'removed') {
+      disableWTInput()
+      console.log('-> disabling WT Input')
+    } else {
+      enableWTInput(rfid)
+      console.log('-> enabling WT Input')
+    }
+  } else if (type == 'wish') {
+    if (rfid == 'removed') {
+      disableWishInput()
+      console.log('-> disabling Wish Input')
+    } else {
+      enableWishInput(rfid)
+      console.log('-> enabling Wish Input')
+    }
+  }
+}
+
 //get all programme-slots which currently contain a waschtreff
 const getSlots = () => {
   let db = new sqlite3.Database('./db/waschDB.db')
@@ -118,7 +162,7 @@ const getSlots = () => {
 
     db.all(sql, (err, res) => {
       if (err) {
-        console.log(err)
+        console.log('err:' + err)
         reject(new Error('Error rows is undefined'))
       }
       resolve(res)
@@ -163,7 +207,7 @@ const removeWTFromSlot = slotname => {
       if (err) {
         reject(err)
       } else {
-        console.log('-> removed WT from Slot "'+slotname+'"')
+        console.log('-> removed WT from Slot "' + slotname + '"')
         resolve()
       }
     })
@@ -209,7 +253,7 @@ const updateSlots = () => {
       var nextPromises = []
       slots.forEach(slot => {
         if (slot.participants == 0) {
-          console.log('-> WT "'+ slot.WT_ID + '" has no participants anymore')
+          console.log('-> WT "' + slot.WT_ID + '" has no participants anymore')
           nextPromises.push(removeWTFromSlot(slot.S_NAME))
         }
       })
@@ -264,9 +308,7 @@ const getCurrentSlotWT = function (slot) {
           '-> "' + slot + '" is currently carrying WT "' + row.S_WT_ID + '"'
         )
       } else {
-        console.log(
-          '-> "' + slot + '" is currently carrying no WT'
-        )
+        console.log('-> "' + slot + '" is currently carrying no WT')
       }
       resolve(row.S_WT_ID)
     })
@@ -360,7 +402,7 @@ const setCurrentWT = (WT_ID, rfid) => {
       if (err) {
         reject(new Error('Error rows is undefined'))
       } else {
-        console.log('-> user is now particiapting in WT "'+WT_ID+'"')
+        console.log('-> user is now particiapting in WT "' + WT_ID + '"')
         resolve(WT_ID)
       }
     })
@@ -383,7 +425,7 @@ const setSlotWT = (WT_ID, slot) => {
       if (err) {
         reject(err)
       } else {
-        console.log('-> assigned WT "'+WT_ID+'" to slot "'+slot+'"')
+        console.log('-> assigned WT "' + WT_ID + '" to slot "' + slot + '"')
         resolve()
       }
     })
@@ -474,7 +516,4 @@ const registerCard = (rfid, saldo) => {
 }
 
 exports.handleWallCard = handleWallCard
-exports.enableWTInput = enableWTInput
-exports.disableWTInput = disableWTInput
-exports.enableWishInput = enableWishInput
-exports.disableWishInput = disableWishInput
+exports.handleTableCard = handleTableCard

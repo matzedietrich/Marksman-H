@@ -7,6 +7,8 @@ var wishesContainer
 var shine
 var currentUser
 
+
+//focus input field
 const focus = ID => {
   console.log(ID)
   document.getElementById(ID).focus()
@@ -20,6 +22,7 @@ const focus = ID => {
   }
 }
 
+//find DOM Elements when loaded
 document.addEventListener('DOMContentLoaded', function () {
   WTInput = document.getElementById('WTInput')
   WTName = document.getElementById('WTName')
@@ -42,6 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
     WTName_Number.classList.remove('activeInput')
   })
 
+  //listen to 'enter' key for submit
   WishWord.addEventListener('keypress', function (event) {
     if (event.key == 'Enter') {
       event.preventDefault()
@@ -55,6 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
+  //listen to 'enter' key for submit
   WTName.addEventListener('keypress', function (event) {
     if (event.key == 'Enter') {
       event.preventDefault()
@@ -68,7 +73,8 @@ document.addEventListener('DOMContentLoaded', function () {
         return
       }
       sendWTDraft(currentUser, name, desc)
-    } else if (event.key == 'Tab') {
+    } //listen for 'tab' key for input field switching
+    else if (event.key == 'Tab') {
       console.log('tabbing')
       focus('WTDesc')
       if (event.preventDefault) {
@@ -78,6 +84,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   })
 
+  //listen to 'enter' key for submit
   WTDesc.addEventListener('keypress', function (event) {
     if (event.key == 'Enter') {
       event.preventDefault()
@@ -94,11 +101,7 @@ document.addEventListener('DOMContentLoaded', function () {
       WTDesc.value = ''
       console.log('submitting')
       sendWTDraft(currentUser, name, desc)
-    }
-  })
-
-  WTDesc.addEventListener('keydown', function (event) {
-    if (event.key == 'Tab') {
+    } else if (event.key == 'Tab') {
       console.log('tabbing')
       focus('WTName')
       if (event.preventDefault) {
@@ -107,19 +110,9 @@ document.addEventListener('DOMContentLoaded', function () {
       return false
     }
   })
-
-  WTName.addEventListener('keydown', function (event) {
-    if (event.key == 'Tab') {
-      console.log('tabbing')
-      focus('WTDesc')
-      if (event.preventDefault) {
-        event.preventDefault()
-      }
-      return false
-    }
-  })
 })
 
+//send Wish to server
 const sendWish = (rfid, wish) => {
   console.log(currentUser)
   socket.emit('saveWish', {
@@ -129,6 +122,7 @@ const sendWish = (rfid, wish) => {
   console.log('saving')
 }
 
+//server WT Draft to server
 const sendWTDraft = (rfid, name, desc) => {
   socket.emit('saveWTDraft', {
     rfid: rfid,
@@ -141,6 +135,7 @@ const sendWTDraft = (rfid, name, desc) => {
   shine.classList.remove('appear')
 }
 
+//update shown wishes
 const updateWishes = wishes => {
   wishes.forEach(wish => {
     if (document.getElementById(wish.W_ID)) {
@@ -172,6 +167,8 @@ const updateWishes = wishes => {
   updateWishPos(allWishContainer1)
 }
 
+
+//update position of each wish
 const updateWishPos = wishes => {
   let index = 0
   numberOfWishes = wishes.length
@@ -195,6 +192,8 @@ const updateWishPos = wishes => {
   }
 }
 
+
+//listen to 'enableWTInput' event and react to it
 socket.on('enableWTInput', function (rfid) {
   WTInput.classList.add('enabled')
   focus('WTName')
@@ -206,11 +205,13 @@ socket.on('enableWTInput', function (rfid) {
   currentUser = rfid
 })
 
+ //listen to 'disableWTInput' event and react to it
 socket.on('disableWTInput', function () {
   WTInput.classList.remove('enabled')
   shine.classList.remove('appear')
 })
 
+//listen to 'enableWishInput' event and react to it
 socket.on('enableWishInput', function (rfid) {
   WishInput.classList.add('enabled')
   document.getElementById('WishWord').focus()
@@ -220,9 +221,11 @@ socket.on('enableWishInput', function (rfid) {
   currentUser = rfid
 })
 
+ //listen to 'disableWishInput' event and react to it
 socket.on('disableWishInput', function () {
   WishInput.classList.remove('enabled')
   shine.classList.remove('appear')
 })
 
+//update wishes when succuessfully stored in database
 socket.on('getWishes', wishes => updateWishes(wishes))

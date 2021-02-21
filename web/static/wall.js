@@ -5,11 +5,13 @@ var desc
 var currentUser
 var slots
 
+
+//get DOM Elements on load
 document.addEventListener('DOMContentLoaded', function () {
   slots = document.getElementsByClassName('slot')
 })
 
-
+//update slots when programme was updated
 const updateSlots = slots => {
   slots.forEach(slot => {
     let el = document.querySelector(`#${slot.S_NAME}`)

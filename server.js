@@ -16,6 +16,11 @@ wallPort.on('open', () => {
   console.log('wall serial port open')
 })
 
+//on 'error' tell me
+wallPort.on('error', err => {
+  console.log('error ----> ' + err)
+})
+
 //on 'data' handle data
 wallParser.on('data', data => {
   let type = data.split(':')[0]
@@ -27,40 +32,38 @@ wallParser.on('data', data => {
   } else if (rfid != 'removed') {
     //recognized card!
     let slot = type
-    console.log('__RECOGNIZED CARD WITH RF_ID "' + rfid + '" AT SLOT "' + slot +'"__')
+    console.log(
+      '__RECOGNIZED CARD WITH RF_ID "' + rfid + '" AT SLOT "' + slot + '"__'
+    )
     app.handleWallCard(slot, rfid)
   }
 })
 
 // on 'open' tell me
- tablePort.on('open', () => {
+tablePort.on('open', () => {
   console.log('table serial port open')
 })
 
 // on 'error' tell me
- tablePort.on('error', function (err) {
+tablePort.on('error', function (err) {
   console.log('error ----> ' + err)
 })
 
 // on 'data' handle data
- tableParser.on('data', data => {
+tableParser.on('data', data => {
   let type = data.split(':')[0]
   let rfid = data.split(':')[1].trim()
-  console.log(data)
 
-  if (type == 'wt') {
-    if (rfid == 'removed') {
-      app.disableWTInput()
-    } else {
-      app.enableWTInput(rfid)
-      console.log('enabling')
-    }
-  } else if (type == 'wish') {
-    if (rfid == 'removed') {
-      app.disableWishInput()
-    } else {
-      app.enableWishInput(rfid)
-      console.log('enabling')
-    }
+  if (data.length > 15) {
+    // no data, just a message
+    console.log(data)
+  } else if (rfid == 'removed') {
+    console.log('__RECOGNIZED REMOVED CARD AT TABLE AREA "' + type + '"__')
+    app.handleTableCard(type, rfid)
+  } else if (rfid != 'removed') {
+    console.log(
+      '__RECOGNIZED CARD "' + rfid + '" AT TABLE AREA "' + type + '"__'
+    )
+    app.handleTableCard(type, rfid)
   }
 })

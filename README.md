@@ -42,8 +42,8 @@ Now install all the dependencies by running `npm install` inside the root direct
 
 ### Upload to microcontroller
 In order to use the microcontrollers, you need to upload the scripts inside `rfidTable` and `rfidWall`.
-Therefore open them up inside the Arduino IDE one after another. Connect your microcontroller via USB and make sure to select the correct board and PORT. Now you are ready to upload the programme.
-You may also need to install some libraries used in the programme.
+Therefore open them up inside the Arduino IDE one after another. Connect your microcontroller via USB and make sure to select the correct board and PORT. Now you are ready to upload the program.
+You may also need to install some libraries used in the script.
 
 ### Replace PORTS
 Now you need to open up the `server.js` script and replace the Ports (`COM5`,`COM6`) to match your system:

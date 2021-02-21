@@ -24,11 +24,11 @@ In order to start the prototype, prepare the following hardware:
 
 #### Fritzing
 Connect the microcontrollers to two RDID-Modules each, as shown in the image:
-![hardware assembly](images/fritzing.png)
+![fritzing](https://github.com/[matthias.dietrich]/WaschRaum/blob/master/fritzing.png?raw=true)
 
 ### Hardware assembly
 Now, that you have all the hardware prepared, assembly it as shown in the image:
-![hardware assembly](images/aufbau.png)
+![hardware assembly](https://github.com/[matthias.dietrich]/WaschRaum/blob/master/aufbau.png?raw=true)
 
 ## Software Setup
 

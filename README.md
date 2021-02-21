@@ -24,11 +24,11 @@ In order to start the prototype, prepare the following hardware:
 
 #### Fritzing
 Connect the microcontrollers to two RDID-Modules each, as shown in the image:
-![hardware assembly](./images/fritzing.png)
+![hardware assembly](images/fritzing.png)
 
 ### Hardware assembly
 Now, that you have all the hardware prepared, assembly it as shown in the image:
-![hardware assembly](./images/aufbau.png)
+![hardware assembly](images/aufbau.png)
 
 ## Software Setup
 

@@ -9,6 +9,17 @@
     }
 }
 
+@keyframes addWT {
+    0% {
+        height: 0%;
+        opacity: 0;
+    }
+    100% {
+        height: 100%;
+        opacity: 1;
+    }
+}
+
 @keyframes addWT_card {
     0% {
         transform: scale(1);
@@ -33,26 +44,23 @@
     font-size: 36pt;
     position: absolute;
     width: 100%;
-    z-index:250 !important;
-    margin-top:0px;
-    height:100%;
-    overflow:hidden;
-
+    z-index: 250 !important;
+    margin-top: 0px;
+    height: 100%;
+    overflow: hidden;
 }
 
 .date p {
-    margin-top:10px;
+    margin-top: 10px;
     padding-top: 20px;
     padding-bottom: 20px;
     font-size: 18pt;
     border-radius: 5px;
     width: 100%;
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
 }
-
-
 
 .day {
     display: flex;
@@ -99,8 +107,8 @@
     height: 240px;
     max-height: 270px;
     margin-top: 40px;
-    margin-left:20px;
-    margin-right:20px;
+    margin-left: 20px;
+    margin-right: 20px;
     color: white;
     position: relative;
     padding: 30px;
@@ -159,33 +167,53 @@
     animation-fill-mode: forwards;
 }
 
+.created .WTbackground {
+    animation-name: addWT;
+    animation-duration: 2s;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+}
+
 .empty .card {
     background: rgba(0, 0, 0, 0.4);
 }
 
 .today {
-    background:#c13d8e !important;
-    color:black;
+    background: #c13d8e !important;
+    color: black;
 }
 
 .today::before {
-    left:-45px;
+    left: -45px;
     width: 60px;
     height: 60px;
     background: black;
     position: absolute;
     content: "";
     transform: rotate(45deg);
-    z-index:150;
+    z-index: 150;
 }
 
-.today::after{
-    width:5px;
-    height:100vh;
-    background:#c13d8e;
-    content:"";
+.today::after {
+    width: 5px;
+    height: 100vh;
+    background: #c13d8e;
+    content: "";
     position: absolute;
-    top:70px;
-    left:0px;
-    border-radius:9999px;
+    top: 70px;
+    left: 0px;
+    border-radius: 9999px;
+}
+
+
+
+
+.slot p, .slot .h1{
+    opacity:0;
+    transition: opacity 2s ease-in-out;
+}
+
+
+.created p, .created .h1{
+    opacity:1;
 }
